@@ -1,0 +1,10 @@
+﻿{
+    "samples":  100,
+    "p50ms":  21.8,
+    "p95ms":  35.3,
+    "maxms":  48.5,
+    "versionP95ms":  19.9,
+    "targetMixed":  300,
+    "targetVersion":  200,
+    "pass":  true
+}

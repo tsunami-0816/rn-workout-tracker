@@ -1,0 +1,26 @@
+# 依赖与构建产物
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+.expo/
+.expo-shared/
+coverage/
+**/coverage/
+*.hbc
+*.apk
+
+# 本地环境与密钥
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# 日志与临时文件
+*.log
+logs/
+*.tmp
+.DS_Store
+Thumbs.db

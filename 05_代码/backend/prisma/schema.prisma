@@ -1,0 +1,98 @@
+// rn-mobile-app-release · 数据模型（严格 5 张业务表 · 基线 C04 口径）
+// 唯一复合约束：set_logs(workout_log_id, exercise_id, set_no) = 幂等最终防线
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// 账号与角色（role 仅 user/admin，admin 只由 seed 产生）
+model User {
+  id        BigInt   @id @default(autoincrement())
+  phone     String   @db.VarChar(11)
+  nickname  String   @default("训练者") @db.VarChar(32)
+  role      String   @default("user") @db.VarChar(8)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  plans       Plan[]
+  workoutLogs WorkoutLog[]
+
+  @@unique([phone], map: "uk_users_phone")
+  @@map("users")
+}
+
+/// 三日分化计划（push/pull/legs）
+model Plan {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt   @map("user_id")
+  name      String   @db.VarChar(32)
+  dayType   String   @map("day_type") @db.VarChar(8)
+  sortNo    Int      @default(0) @map("sort_no") @db.SmallInt
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises   Exercise[]
+  workoutLogs WorkoutLog[]
+
+  @@index([userId, dayType], map: "idx_plans_user_day")
+  @@map("plans")
+}
+
+/// 计划内动作（order_no 决定列表顺序）
+model Exercise {
+  id         BigInt @id @default(autoincrement())
+  planId     BigInt @map("plan_id")
+  name       String @db.VarChar(48)
+  targetSets Int    @map("target_sets") @db.SmallInt
+  targetReps Int    @map("target_reps") @db.SmallInt
+  orderNo    Int    @map("order_no") @db.SmallInt
+
+  plan    Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  setLogs SetLog[]
+
+  @@index([planId, orderNo], map: "idx_exercises_plan_order")
+  @@map("exercises")
+}
+
+/// 一次训练（一个用户一天一条；select-first 复用）
+model WorkoutLog {
+  id          BigInt    @id @default(autoincrement())
+  userId      BigInt    @map("user_id")
+  planId      BigInt    @map("plan_id")
+  logDate     DateTime  @map("log_date") @db.Date
+  totalVolume Decimal   @default(0) @map("total_volume") @db.Decimal(12, 2)
+  finishedAt  DateTime? @map("finished_at") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan    Plan     @relation(fields: [planId], references: [id], onDelete: Restrict)
+  setLogs SetLog[]
+
+  // 一个用户一天只能有一条训练：并发 start 的最终防线（F-07）
+  @@unique([userId, logDate], map: "uk_workout_user_date")
+  @@index([userId, logDate(sort: Desc)], map: "idx_workout_user_date")
+  @@map("workout_logs")
+}
+
+/// 组次记录（复合唯一 = 连点 3 次数据库仍 1 行）
+model SetLog {
+  id           BigInt   @id @default(autoincrement())
+  workoutLogId BigInt   @map("workout_log_id")
+  exerciseId   BigInt   @map("exercise_id")
+  setNo        Int      @map("set_no") @db.SmallInt
+  weight       Decimal  @default(0) @db.Decimal(6, 2)
+  reps         Int      @default(0) @db.SmallInt
+  done         Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  workoutLog WorkoutLog @relation(fields: [workoutLogId], references: [id], onDelete: Cascade)
+  exercise   Exercise   @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  @@unique([workoutLogId, exerciseId, setNo], map: "uk_set_logs")
+  @@map("set_logs")
+}

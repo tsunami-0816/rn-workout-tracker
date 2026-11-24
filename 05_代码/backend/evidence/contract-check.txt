@@ -1,0 +1,24 @@
+openapi=D:\lg\project\工作流测试\projects\rn-mobile-app-release\06.5_契约\openapi.json
+paths=19
+operations=20
+expected=20 missing=0 extra=0
+DELETE /api/workouts/{id}/sets/{setId}
+GET /api/admin/stats/summary
+GET /api/admin/users
+GET /api/admin/workouts
+GET /api/app/version
+GET /api/auth/me
+GET /api/health
+GET /api/plans
+GET /api/plans/current
+GET /api/plans/{id}/exercises
+GET /api/stats/history
+GET /api/stats/weekly
+GET /api/workouts
+GET /api/workouts/{id}
+PATCH /api/workouts/{id}/sets/{setId}
+POST /api/auth/login
+POST /api/auth/send-code
+POST /api/workouts/start
+POST /api/workouts/{id}/finish
+POST /api/workouts/{id}/sets

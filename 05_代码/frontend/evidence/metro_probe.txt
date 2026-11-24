@@ -1,0 +1,8 @@
+Metro 8096 探活（2026-11-23 20:01，Windows PowerShell + curl --noproxy "*"）
+1) GET http://127.0.0.1:8096/status
+   -> HTTP/1.1 200 OK
+   -> body: packager-status:running
+2) GET http://127.0.0.1:8096/index.bundle?platform=android&dev=true&minify=false
+   -> HTTP 200
+   -> size_download 5,803,700 bytes
+原始 curl 详细输出曾落盘于 probe2.txt（已合并进本文件后删除）。

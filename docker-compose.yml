@@ -1,0 +1,24 @@
+# rn-mobile-app-release · 本机依赖（只有 PostgreSQL，不引 Redis/MySQL）
+# 启动：docker compose up -d pg      停止：docker compose down
+services:
+  pg:
+    image: postgres:16-alpine
+    container_name: rn-workout-pg
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rn_workout
+      TZ: Asia/Shanghai
+      PGTZ: Asia/Shanghai
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rn_workout"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pg_data:

@@ -1,0 +1,30 @@
+{
+  "name": "rn-workout-backend-deps-check",
+  "version": "0.0.0",
+  "private": true,
+  "note": "第 2 步选型体检专用清单，不是 5A 真实工程；真实 package.json 在 05_代码/backend 落地后需再跑一次 --solve。",
+  "dependencies": {
+    "@nestjs/common": "12.6.0",
+    "@nestjs/core": "12.6.0",
+    "@nestjs/platform-express": "12.6.0",
+    "@nestjs/config": "12.1.1",
+    "@nestjs/jwt": "12.0.5",
+    "@nestjs/swagger": "12.1.2",
+    "@prisma/client": "7.10.1",
+    "class-validator": "0.15.1",
+    "class-transformer": "0.5.1",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "12.5.1",
+    "@types/jest": "30.0.0",
+    "@types/node": "26.6.6",
+    "@types/supertest": "7.2.1",
+    "jest": "30.5.2",
+    "prisma": "7.10.1",
+    "supertest": "7.3.2",
+    "ts-jest": "29.4.15",
+    "typescript": "5.9.3"
+  }
+}

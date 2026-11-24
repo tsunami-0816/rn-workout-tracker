@@ -1,0 +1,8 @@
+﻿usage: step_gate_check.py [-h] --step {1,4} --file FILE
+
+第 1 / 4 步机器闸门
+
+options:
+  -h, --help    show this help message and exit
+  --step {1,4}  步骤号
+  --file FILE   待校验的产物文件

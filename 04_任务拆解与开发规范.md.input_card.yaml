@@ -1,0 +1,219 @@
+# step4 任务拆解与开发规范输入卡
+step: 4
+project: rn-mobile-app-release
+updated_at: 2026-11-23
+sources:
+  - 02_架构设计/第一轮技术架构设计文档.md
+  - 03_评审报告/第一轮架构评审报告.md
+  - 01_项目基线说明书.md
+arch_ref: 02_架构设计/第一轮技术架构设计文档.md
+tasks:
+  - task_id: T-101
+    desc: Expo 58 工程骨架（app.json 包名 com.liuchen.rnworkout / version 1.0.0 / versionCode 1 / TS strict）
+    risk: 中
+    criterion_ref: C07
+  - task_id: T-102
+    desc: React Navigation（AuthStack + MainTabs 三页 + Stack 今日训练/记录/admin）
+    risk: 中
+    criterion_ref: C01
+  - task_id: T-103
+    desc: apiClient（baseURL / 8s 超时 / GET 重试 1 次 / Token 注入 / 401 清态 / 错误码中文）
+    risk: 高
+    criterion_ref: C12
+  - task_id: T-104
+    desc: 通用状态组件（Loading/Empty/Error+重试/Toast）+ SafeArea + 8pt 间距
+    risk: 低
+    criterion_ref: C01
+  - task_id: T-201
+    desc: NestJS 12 骨架（/api 前缀 / ValidationPipe / CORS / ConfigModule）
+    risk: 高
+    criterion_ref: C03
+  - task_id: T-202
+    desc: PG16 compose（宿主 5434 / 卷持久化 / pg_isready healthcheck / TZ）
+    risk: 关键
+    criterion_ref: C04
+  - task_id: T-203
+    desc: Prisma 5 表 schema + 首次迁移 + seed（1 admin / 1 普通用户 / 3 计划 / 每计划 12 动作）
+    risk: 关键
+    criterion_ref: C04
+  - task_id: T-204
+    desc: 统一响应 {code,message,data,traceId} + 全局异常过滤 + 10 个错误码
+    risk: 高
+    criterion_ref: C03
+  - task_id: T-205
+    desc: Auth 组 send-code（60s 频控）/ login（DEMO_CODE 仅 env 无默认值）/ me（脱敏）
+    endpoint: /api/auth/send-code
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-206
+    desc: JWT 签发（HS256/7d/sub-role-phone）+ JwtAuthGuard 全局 + @Public 豁免
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-207
+    desc: RolesGuard + @Roles(admin)，非 admin 返回 40301，登录不产生 admin
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-208
+    desc: 登录页 + SecureStore 存 token（AsyncStorage 2.2.0 降级）+ 401 清态
+    page: frontend/src/screens/LoginScreen.tsx
+    risk: 高
+    criterion_ref: C08
+  - task_id: T-301
+    desc: Plan 组 GET /plans（含本周完成度）/ current（weekday%3）/ {id}/exercises（order_no）
+    endpoint: /api/plans
+    risk: 高
+    criterion_ref: C03
+  - task_id: T-302
+    desc: 计划页（3 张分化卡 + 完成度 + 今日推荐高亮）
+    page: frontend/src/screens/PlansScreen.tsx
+    risk: 中
+    criterion_ref: C01
+  - task_id: T-303
+    desc: 今日训练页 FlatList 性能（getItemLayout 64 / memo / windowSize 7 / 100 条夹具）
+    page: frontend/src/screens/WorkoutScreen.tsx
+    risk: 高
+    criterion_ref: C02
+  - task_id: T-304
+    desc: 记录页组次录入（2.5kg / 1 次步进 + 完成勾选 + 乐观更新 + 失败回滚）
+    page: frontend/src/screens/LogScreen.tsx
+    risk: 高
+    criterion_ref: C01
+  - task_id: T-401
+    desc: Workout 组 start（当日 select-first 事务）/ GET {id} / GET workouts 分页 / finish
+    endpoint: /api/workouts/start
+    risk: 关键
+    criterion_ref: C03
+  - task_id: T-402
+    desc: Set 组 POST upsert（唯一键 ON CONFLICT）/ PATCH / DELETE + 事务重算 total_volume
+    endpoint: /api/workouts/{id}/sets
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-403
+    desc: 记录页提交接线（POST/PATCH/DELETE + 成功后刷新 workout 与统计缓存 key）
+    page: frontend/src/screens/LogScreen.tsx
+    risk: 高
+    criterion_ref: C01
+  - task_id: T-501
+    desc: Stats 组 weekly（ISO 周 COUNT DISTINCT + SUM + 4 周序列）/ history + 60s 缓存写后失效
+    endpoint: /api/stats/weekly
+    risk: 高
+    criterion_ref: C12
+  - task_id: T-502
+    desc: 统计页（本周天数 / 总容量 / 近 4 周纯 View 柱图 / 空态）
+    page: frontend/src/screens/StatsScreen.tsx
+    risk: 中
+    criterion_ref: C01
+  - task_id: T-601
+    desc: 我的页（昵称 / 脱敏手机号 / 角色徽标 / 退出登录）
+    page: frontend/src/screens/ProfileScreen.tsx
+    risk: 中
+    criterion_ref: C01
+  - task_id: T-602
+    desc: Admin 组 workouts（分页 + 日期筛选）/ users / stats/summary，全部脱敏
+    endpoint: /api/admin/workouts
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-603
+    desc: admin 子页（入口仅 admin 渲染 / 分页列表 / 403 兜底）
+    page: frontend/src/screens/AdminScreen.tsx
+    risk: 高
+    criterion_ref: C05
+  - task_id: T-701
+    desc: GET /api/app/version（release.json + env 覆盖，不缓存）
+    endpoint: /api/app/version
+    risk: 中
+    criterion_ref: C09
+  - task_id: T-702
+    desc: 启动版本检查（expo-constants 读本地版本 → 落后弹 Modal → Linking 打开 apkUrl）
+    page: frontend/src/hooks/useVersionCheck.ts
+    risk: 中
+    criterion_ref: C09
+  - task_id: T-703
+    desc: EAS 探路（eas login + eas.json preview=APK + 1.0.0 构建 + 真机安装截图）
+    risk: 关键
+    criterion_ref: C07
+  - task_id: T-704
+    desc: 1.0.1 覆盖升级（versionCode 2 + 覆盖安装 + 登录态保留截图）
+    risk: 关键
+    criterion_ref: C08
+  - task_id: T-705
+    desc: APK 留档 + release.json apkUrl + 发布记录与回滚说明（含签名来源）
+    risk: 中
+    criterion_ref: C07
+  - task_id: T-801
+    desc: Flutter 3.x 工程 + 登录页（http 调 /api/auth/login）
+    page: flutter/lib/screens/login_page.dart
+    risk: 中
+    criterion_ref: C10
+  - task_id: T-802
+    desc: Flutter 列表页（ListView.builder 调 /api/plans/{id}/exercises）
+    page: flutter/lib/screens/list_page.dart
+    risk: 中
+    criterion_ref: C10
+  - task_id: T-803
+    desc: 跨框架差异表 ≥5 条（目录/状态/列表/打包/体积/热重载）
+    risk: 低
+    criterion_ref: C11
+  - task_id: T-804
+    desc: Jest service 单测（Auth/Workout 幂等与容量/Stats 聚合/Version）+ 前端纯函数单测，覆盖 ≥60%
+    risk: 高
+    criterion_ref: C06
+  - task_id: T-805
+    desc: e2e 10 条（supertest：登录成/败、401、403×2、幂等、版本、参数校验、分页边界、health）
+    risk: 高
+    criterion_ref: C06
+  - task_id: T-806
+    desc: Swagger 导出 06.5_契约/openapi.json + api_contract_validator 校验（≤20 端点）
+    risk: 中
+    criterion_ref: C03
+  - task_id: T-901
+    desc: 启停脚本 start_all/stop_all + smoke.ps1（6+ 断言）
+    risk: 关键
+    criterion_ref: C12
+  - task_id: T-902
+    desc: p95.ps1（JSONL 分组 P95，样本 <20 报不足，超线 exit 1）
+    risk: 中
+    criterion_ref: C02
+  - task_id: T-903
+    desc: .env.example + .gitignore + .secretignore + prepush_check 密钥扫描
+    risk: 关键
+    criterion_ref: C13
+  - task_id: T-904
+    desc: 端口表登记 8094/5434/8096 + env_preflight 启动前断言
+    risk: 中
+    criterion_ref: C12
+  - task_id: T-905
+    desc: _运行度量.md（P95 样本/用例数/覆盖率/包体积）+ README + 3 分钟演示脚本
+    risk: 低
+    criterion_ref: C14
+scope:
+  files_in_scope:
+    - 05_代码/backend/**
+    - 05_代码/frontend/**
+    - 05_代码/flutter/**
+    - 06.5_契约/**
+    - 08_测试/**
+    - 10_交付/**
+    - 09_验收/**
+    - scripts/start_all.ps1
+    - scripts/stop_all.ps1
+    - scripts/smoke.ps1
+    - scripts/p95.ps1
+    - docker-compose.yml
+    - release.json
+  out_of_scope:
+    - 02_架构设计/**
+    - 03_评审报告/**
+    - 01_项目基线说明书.md
+    - _设计实施映射表.md
+    - workflow/**
+    - WORKFLOW_*.md
+    - projects/_队列/**
+    - scripts/step_gate_check.py
+    - scripts/design_impl_check.py
+    - scripts/input_card_check.py
+    - scripts/workflow_completion_check.py
+limits:
+  max_files: 90
+  max_attempts: 3
+  timeout_min: 300

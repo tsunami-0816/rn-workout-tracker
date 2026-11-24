@@ -1,0 +1,17 @@
+node_modules/
+dist/
+src/generated/
+coverage/
+*.tsbuildinfo
+
+# 环境与密钥（真实值不进仓）
+.env
+.env.local
+*.pem
+*.key
+
+# 日志与临时
+logs/
+npm-install.log
+*.log
+.tmp/

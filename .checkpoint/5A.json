@@ -1,0 +1,10 @@
+{
+  "step": "5A",
+  "command": "npm run build; npm test; scripts/smoke.ps1; scripts/p95.ps1",
+  "pid": null,
+  "started_at": "2026-11-23 18:54:40",
+  "ended_at": "2026-11-23 18:54:40",
+  "exit_code": 0,
+  "output_path": "",
+  "artifacts": []
+}

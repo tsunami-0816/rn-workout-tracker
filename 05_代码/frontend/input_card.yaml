@@ -1,0 +1,104 @@
+# step5B 前端开发输入卡（由第 4 步产出，5B 开工时落盘）
+step: 5B
+project: rn-mobile-app-release
+updated_at: 2026-11-23 20:05
+sources:
+  - 02_架构设计/第一轮技术架构设计文档.md
+  - 04_任务拆解与开发规范.md
+  - _设计实施映射表.md
+  - 06.5_契约/openapi.json
+  - 05_代码/backend/mock/samples.json
+arch_ref: 02_架构设计/第一轮技术架构设计文档.md
+tech_stack:
+  framework: Expo SDK 58.0.26 / React Native 0.88.1 / React 19.3.0
+  language: TypeScript 5.9.3（strict + noUncheckedIndexedAccess）
+  nav: "@react-navigation/native 7.5.2 / native-stack 7.21.1 / bottom-tabs 7.22.0"
+  data: "@tanstack/react-query 5.108.3 / zustand 5.1.0"
+  storage: expo-secure-store 58.0.3（不可用时降级 AsyncStorage 2.2.0）
+  test: jest-expo 58.0.15（纯函数单测）
+tasks:
+  - task_id: T-101
+    desc: Expo 58 工程骨架（TS strict / app.json 包名 com.liuchen.rnworkout / 端口 8096 / 60s 首屏预算）
+    risk: 高
+    criterion_ref: C01
+  - task_id: T-102
+    desc: AuthStack + MainTabs（计划/统计/我的）+ Stack（训练/记录/admin），无 token 走登录，401 自动回登录
+    risk: 关键
+    criterion_ref: C01
+  - task_id: T-103
+    desc: 登录页（手机号校验 / 60s 倒计时 / 验证码错误内联）
+    endpoint: /api/auth/send-code + /api/auth/login
+    risk: 高
+    criterion_ref: C01
+  - task_id: T-104
+    desc: 计划页三张卡 + 今日标记 + 本周次数
+    endpoint: /api/plans
+    risk: 中
+    criterion_ref: C01
+  - task_id: T-208
+    desc: apiClient 唯一出口（8s 超时 / GET 重试 1 次 / Token / 401 清态 / 错误码中文）
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-302
+    desc: 今日训练动作列表（FlatList 固定行高 + 100 条性能夹具开关）
+    endpoint: /api/plans/{id}/exercises
+    risk: 高
+    criterion_ref: C02
+  - task_id: T-303
+    desc: 记录页（组次行 + 重量/次数步进 + 乐观提交 + 失败红行可重试）
+    endpoint: /api/workouts/{id}/sets
+    risk: 关键
+    criterion_ref: C08
+  - task_id: T-304
+    desc: 完成训练（当日写入幂等 / 统计缓存写后失效）
+    endpoint: /api/workouts/{id}/finish
+    risk: 高
+    criterion_ref: C08
+  - task_id: T-403
+    desc: 我的页（昵称/脱敏手机号/角色徽标/版本号/退出登录清 token）
+    endpoint: /api/auth/me
+    risk: 中
+    criterion_ref: C05
+  - task_id: T-502
+    desc: 统计页（本周天数/总容量 + 4 周柱状 + 最近训练）
+    endpoint: /api/stats/weekly
+    risk: 中
+    criterion_ref: C09
+  - task_id: T-601
+    desc: 管理员入口（仅 role=admin 显示，403 兜底文案）
+    endpoint: /api/admin/workouts
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-603
+    desc: admin 子页（全站汇总 + 打卡分页 + 用户脱敏列表）
+    endpoint: /api/admin/workouts?page=&size=
+    risk: 高
+    criterion_ref: C05
+  - task_id: T-702
+    desc: 启动版本检查（远端 buildNo > 本地 versionCode 才弹窗；接口不可达静默）
+    endpoint: /api/app/version
+    risk: 中
+    criterion_ref: C09
+mock_ref: 05_代码/backend/mock/samples.json
+mock_policy: 不 mock 数据；本地开发对接真实 8094；离线时由 apiClient 统一报网络错误；界面不内置假统计
+ports:
+  metro: 8096
+  backend: 8094
+scope:
+  files_in_scope:
+    - 05_代码/frontend/**
+    - _设计实施映射表.md
+  out_of_scope:
+    - 05_代码/backend/**
+    - 05_代码/flutter/**
+    - 06.5_契约/**
+    - 02_架构设计/**
+    - 03_评审报告/**
+    - 01_项目基线说明书.md
+    - workflow/**
+    - WORKFLOW_*.md
+    - projects/_队列/**
+limits:
+  max_files: 60
+  max_attempts: 3
+  timeout_min: 240

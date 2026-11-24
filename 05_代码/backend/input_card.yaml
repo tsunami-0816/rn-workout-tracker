@@ -1,0 +1,131 @@
+# step5A 后端/数据开发输入卡（由第 4 步产出，5A 收口时补落）
+step: 5A
+project: rn-mobile-app-release
+updated_at: 2026-11-23 18:51
+sources:
+  - 02_架构设计/第一轮技术架构设计文档.md
+  - 04_任务拆解与开发规范.md
+  - _设计实施映射表.md
+arch_ref: 02_架构设计/第一轮技术架构设计文档.md
+tech_stack:
+  backend: NestJS 12（纯 ESM）+ Prisma 7 + PG 16
+  runtime: Node 22
+  cache: 进程内 60s Map（不引 Redis）
+tasks:
+  - task_id: T-201
+    desc: NestJS 12 骨架（/api 前缀 / ValidationPipe / CORS / ConfigModule）
+    endpoint: /api/health
+    risk: 高
+    criterion_ref: C03
+  - task_id: T-202
+    desc: PG16 compose（宿主 5434 / 卷持久化 / pg_isready healthcheck / TZ=Asia/Shanghai）
+    risk: 关键
+    criterion_ref: C04
+  - task_id: T-203
+    desc: Prisma 5 表 + 首次迁移 + seed（1 admin / 1 普通用户 / 3 计划 / 每计划 12 动作）
+    risk: 关键
+    criterion_ref: C04
+  - task_id: T-204
+    desc: 统一响应 + 全局异常过滤 + 10 个错误码
+    risk: 高
+    criterion_ref: C03
+  - task_id: T-205
+    desc: Auth 3 端点（send-code 60s 频控 / login 仅 env 读 DEMO_CODE / me 脱敏）
+    endpoint: /api/auth/login
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-206
+    desc: JWT 签发（HS256/7d）+ JwtAuthGuard 全局 + @Public 豁免
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-207
+    desc: RolesGuard + @Roles(admin)，非 admin 40301
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-301
+    desc: Plan 3 端点（plans / current / exercises）
+    endpoint: /api/plans
+    risk: 高
+    criterion_ref: C03
+  - task_id: T-401
+    desc: Workout 4 端点（start / detail / list / finish），同日 start 复用
+    endpoint: /api/workouts/start
+    risk: 关键
+    criterion_ref: C03
+  - task_id: T-402
+    desc: Set 3 端点（upsert / patch / delete）+ 事务重算容量
+    endpoint: /api/workouts/{id}/sets
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-501
+    desc: Stats 2 端点（weekly / history）+ 60s 缓存与写后失效
+    endpoint: /api/stats/weekly
+    risk: 高
+    criterion_ref: C12
+  - task_id: T-602
+    desc: Admin 3 端点（workouts / users / stats summary，脱敏 + size≤50）
+    endpoint: /api/admin/workouts
+    risk: 关键
+    criterion_ref: C05
+  - task_id: T-701
+    desc: 版本接口（release.json + env 覆盖，不缓存）
+    endpoint: /api/app/version
+    risk: 中
+    criterion_ref: C09
+  - task_id: T-804
+    desc: Jest 单测（Auth/Workout 幂等与容量/Stats 聚合/Version/guards/过滤）+ 覆盖率限定 service+common
+    risk: 高
+    criterion_ref: C06
+  - task_id: T-805
+    desc: e2e 10 条（supertest 口径，真 HTTP 打 8094）
+    risk: 高
+    criterion_ref: C06
+  - task_id: T-806
+    desc: Swagger 导出 06.5_契约/openapi.json + paths=0 拒绝覆盖
+    risk: 中
+    criterion_ref: C03
+  - task_id: T-901
+    desc: start_all.ps1 / stop_all.ps1 / smoke.ps1（6+ 断言）
+    risk: 关键
+    criterion_ref: C12
+  - task_id: T-902
+    desc: p95.ps1（按 path 分组算 P95，超线 exit 1）
+    risk: 中
+    criterion_ref: C12
+  - task_id: T-903
+    desc: .env.example / .gitignore / .secretignore + 密钥快扫
+    risk: 关键
+    criterion_ref: C13
+  - task_id: T-904
+    desc: 端口表 + start_all 内 env_preflight --ports 断言
+    risk: 中
+    criterion_ref: C12
+mock_policy: 外部依赖必须 Mock 并带 # MOCK: 注释；本项目无第三方外部依赖，前端对照样本=真实录制 mock/samples.json
+ports:
+  postgres: 5434
+  backend: 8094
+  metro: 8096
+scope:
+  files_in_scope:
+    - 05_代码/backend/**
+    - docker-compose.yml
+    - release.json
+    - scripts/start_all.ps1
+    - scripts/stop_all.ps1
+    - scripts/smoke.ps1
+    - scripts/p95.ps1
+    - 06.5_契约/openapi.json
+    - _设计实施映射表.md
+  out_of_scope:
+    - 05_代码/frontend/**
+    - 05_代码/flutter/**
+    - 02_架构设计/**
+    - 03_评审报告/**
+    - 01_项目基线说明书.md
+    - workflow/**
+    - WORKFLOW_*.md
+    - projects/_队列/**
+limits:
+  max_files: 70
+  max_attempts: 3
+  timeout_min: 300

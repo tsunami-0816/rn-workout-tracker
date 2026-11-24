@@ -1,0 +1,474 @@
+{
+  "generatedAt": "2026-11-23T10:21:10.159Z",
+  "base": "http://127.0.0.1:8094/api",
+  "samples": {
+    "POST /api/auth/send-code": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "cooldown": 60
+        },
+        "traceId": "a91195eb"
+      }
+    },
+    "GET /api/app/version": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "version": "1.0.0",
+          "buildNo": 1,
+          "apkUrl": "http://127.0.0.1:8094/apk/rn-workout-1.0.0.apk",
+          "notes": "首个可安装版本"
+        },
+        "traceId": "80a62848"
+      }
+    },
+    "GET /api/health": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "status": "up",
+          "db": "up",
+          "uptimeSec": 1556
+        },
+        "traceId": "a17306bd"
+      }
+    },
+    "POST /api/auth/login": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "token": "<JWT_TOKEN_7D>",
+          "expiresIn": 604800,
+          "user": {
+            "id": 2,
+            "nickname": "训练者",
+            "role": "user"
+          }
+        },
+        "traceId": "8e809bf3"
+      }
+    },
+    "POST /api/auth/login (admin)": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "token": "<JWT_TOKEN_7D>",
+          "expiresIn": 604800,
+          "user": {
+            "id": 1,
+            "nickname": "管理员",
+            "role": "admin"
+          }
+        },
+        "traceId": "861787db"
+      }
+    },
+    "GET /api/auth/me": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "id": 2,
+          "nickname": "训练者",
+          "phoneMasked": "139****9000",
+          "role": "user"
+        },
+        "traceId": "fba4d4de"
+      }
+    },
+    "GET /api/plans": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "list": [
+            {
+              "id": 4,
+              "name": "推日 · 胸肩三头",
+              "dayType": "推",
+              "weekDone": 0
+            },
+            {
+              "id": 5,
+              "name": "拉日 · 背二头",
+              "dayType": "拉",
+              "weekDone": 0
+            },
+            {
+              "id": 6,
+              "name": "腿日 · 腿臀",
+              "dayType": "腿",
+              "weekDone": 0
+            }
+          ],
+          "todayPlanId": 4
+        },
+        "traceId": "a828ad47"
+      }
+    },
+    "GET /api/plans/current": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "id": 4,
+          "name": "推日 · 胸肩三头",
+          "dayType": "推",
+          "exercisesCount": 12
+        },
+        "traceId": "646edeb4"
+      }
+    },
+    "GET /api/plans/{id}/exercises": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "list": [
+            {
+              "id": 1,
+              "name": "杠铃卧推",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 1
+            },
+            {
+              "id": 2,
+              "name": "上斜哑铃卧推",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 2
+            },
+            {
+              "id": 3,
+              "name": "哑铃飞鸟",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 3
+            },
+            {
+              "id": 4,
+              "name": "双杠臂屈伸",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 4
+            },
+            {
+              "id": 5,
+              "name": "坐姿推肩",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 5
+            },
+            {
+              "id": 6,
+              "name": "哑铃侧平举",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 6
+            },
+            {
+              "id": 7,
+              "name": "绳索下压",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 7
+            },
+            {
+              "id": 8,
+              "name": "仰卧臂屈伸",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 8
+            },
+            {
+              "id": 9,
+              "name": "窄距卧推",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 9
+            },
+            {
+              "id": 10,
+              "name": "史密斯机推举",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 10
+            },
+            {
+              "id": 11,
+              "name": "俯卧撑",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 11
+            },
+            {
+              "id": 12,
+              "name": "器械夹胸",
+              "targetSets": 4,
+              "targetReps": 10,
+              "orderNo": 12
+            }
+          ]
+        },
+        "traceId": "8935da1f"
+      }
+    },
+    "GET /api/workouts": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "list": [
+            {
+              "id": 1,
+              "logDate": "2026-11-23",
+              "totalVolume": 1200,
+              "finished": false
+            }
+          ],
+          "total": 1,
+          "page": 1,
+          "size": 5
+        },
+        "traceId": "7d1ae06f"
+      }
+    },
+    "POST /api/workouts/start": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "workoutId": 2,
+          "logDate": "2026-11-23",
+          "totalVolume": 0
+        },
+        "traceId": "e55d5fda"
+      }
+    },
+    "GET /api/workouts/{id}": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "id": 2,
+          "planId": 1,
+          "logDate": "2026-11-23",
+          "totalVolume": 0,
+          "finished": false,
+          "sets": []
+        },
+        "traceId": "5585f0cb"
+      }
+    },
+    "POST /api/workouts/{id}/sets": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "setLog": {
+            "id": 45,
+            "exerciseId": 1,
+            "setNo": 8,
+            "weight": 40,
+            "reps": 10,
+            "done": true
+          },
+          "totalVolume": 400
+        },
+        "traceId": "d316a0e9"
+      }
+    },
+    "PATCH /api/workouts/{id}/sets/{setId}": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "setLog": {
+            "id": 45,
+            "exerciseId": 1,
+            "setNo": 8,
+            "weight": 42.5,
+            "reps": 10,
+            "done": true
+          },
+          "totalVolume": 425
+        },
+        "traceId": "afe908ef"
+      }
+    },
+    "DELETE /api/workouts/{id}/sets/{setId}": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "totalVolume": 0
+        },
+        "traceId": "c3d5b69a"
+      }
+    },
+    "POST /api/workouts/{id}/finish": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "finishedAt": "2026-11-23T10:21:09.779Z",
+          "totalVolume": 0
+        },
+        "traceId": "c17e692a"
+      }
+    },
+    "GET /api/stats/weekly": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "days": 1,
+          "totalVolume": 1200,
+          "series": [
+            {
+              "weekStart": "2026-11-02",
+              "volume": 0
+            },
+            {
+              "weekStart": "2026-11-09",
+              "volume": 0
+            },
+            {
+              "weekStart": "2026-11-16",
+              "volume": 0
+            },
+            {
+              "weekStart": "2026-11-23",
+              "volume": 1200
+            }
+          ]
+        },
+        "traceId": "16512cb5"
+      }
+    },
+    "GET /api/stats/history": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "list": [
+            {
+              "logDate": "2026-11-23",
+              "totalVolume": 1200,
+              "planName": "推日 · 胸肩三头"
+            }
+          ]
+        },
+        "traceId": "4499f5a0"
+      }
+    },
+    "GET /api/admin/workouts": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "list": [
+            {
+              "id": 2,
+              "phoneMasked": "138****8000",
+              "logDate": "2026-11-23",
+              "totalVolume": 0
+            },
+            {
+              "id": 1,
+              "phoneMasked": "139****9000",
+              "logDate": "2026-11-23",
+              "totalVolume": 1200
+            }
+          ],
+          "total": 2,
+          "page": 1,
+          "size": 5
+        },
+        "traceId": "b6f287c7"
+      }
+    },
+    "GET /api/admin/users": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "list": [
+            {
+              "id": 1,
+              "phoneMasked": "138****8000",
+              "role": "admin",
+              "createdAt": "2026-11-23T09:28:16.571Z"
+            },
+            {
+              "id": 2,
+              "phoneMasked": "139****9000",
+              "role": "user",
+              "createdAt": "2026-11-23T09:28:16.634Z"
+            }
+          ],
+          "total": 2
+        },
+        "traceId": "6b35e9c4"
+      }
+    },
+    "GET /api/admin/stats/summary": {
+      "status": 200,
+      "body": {
+        "code": 0,
+        "message": "ok",
+        "data": {
+          "userCount": 2,
+          "workoutCount": 2,
+          "totalVolume": 1200
+        },
+        "traceId": "ff34ba20"
+      }
+    },
+    "GET /api/admin/workouts (403 样例)": {
+      "status": 403,
+      "body": {
+        "code": 40301,
+        "message": "无权限访问该资源",
+        "data": null,
+        "traceId": "fc7e2b30"
+      }
+    },
+    "GET /api/plans (401 样例)": {
+      "status": 401,
+      "body": {
+        "code": 40101,
+        "message": "登录已过期，请重新登录",
+        "data": null,
+        "traceId": "c0393e49"
+      }
+    }
+  }
+}
