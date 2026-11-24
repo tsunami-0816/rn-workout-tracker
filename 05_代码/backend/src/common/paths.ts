@@ -2,19 +2,22 @@ import { existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
 /**
- * 从 start 向上找项目根（含 release.json 或 _项目状态.md 的目录）。
- * 不用 `resolve(cwd, '..')` 写死层级：从 backend 启动、从仓库根启动、从 dist 启动
- * 三种 cwd 下都能落到同一个 release.json（F-03 的根因就是写死了 `..`）。
+ * 从 start 向上找项目根：以 `_项目状态.md` 为唯一锚点，
+ * 避免 `05_代码/release.json` 这类同名副本把项目根“截胡”，
+ * 导致 `10_交付/apk` 静态目录解析到不存在的路径。
+ * 找不到看板时退回“含 release.json”的目录，最后兜底 start/../..
  */
 export function findProjectRoot(start: string = process.cwd()): string {
   let dir = resolve(start);
-  for (let i = 0; i < 6; i += 1) {
-    if (existsSync(join(dir, 'release.json')) || existsSync(join(dir, '_项目状态.md'))) return dir;
+  let fallback = '';
+  for (let i = 0; i < 8; i += 1) {
+    if (existsSync(join(dir, '_项目状态.md'))) return dir;
+    if (!fallback && existsSync(join(dir, 'release.json'))) fallback = dir;
     const parent = dirname(dir);
     if (parent === dir) break;
     dir = parent;
   }
-  return resolve(start, '..', '..');
+  return fallback || resolve(start, '..', '..');
 }
 
 /** 项目根下的 release.json 绝对路径 */

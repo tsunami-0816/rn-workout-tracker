@@ -1,7 +1,6 @@
 {
-  "version": "1.0.0",
-  "buildNo": 1,
-  "apkUrl": "http://127.0.0.1:8094/apk/rn-workout-1.0.0.apk",
-  "notes": "首个可安装版本：登录/计划/训练/记录/统计/我的 + admin"
+    "version":  "1.0.1",
+    "buildNo":  2,
+    "apkUrl":  "http://192.168.0.108:8094/apk/rn-workout-1.0.1.apk",
+    "notes":  "修复 HTTP 明文与接口地址；覆盖升级保留登录态"
 }
-

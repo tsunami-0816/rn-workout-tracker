@@ -17,6 +17,10 @@ coverage/
 .env.*
 !.env.example
 !.env.*.example
+credentials.json
+credentials/
+*.jks
+*.keystore
 
 # 日志与临时文件
 *.log
