@@ -1,0 +1,5 @@
+[api] GET    /auth/me                                   -> 200 (25.6ms) trace=8f6063f7
+[api] GET    /plans                                     -> 200 (12.0ms) trace=1c790926
+[api] GET    /plans/6/exercises                         -> 200 (10.9ms) trace=700a7796
+[api] POST   /workouts/start                            -> 200 (28.5ms) trace=df5262fc
+[api] GET    /admin/workouts                            -> 403 (3.3ms) trace=6cce5bbf

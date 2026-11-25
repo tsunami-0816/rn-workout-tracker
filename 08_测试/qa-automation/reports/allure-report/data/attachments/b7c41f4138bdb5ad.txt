@@ -1,0 +1,1 @@
+[api] GET    /no-such-endpoint                          -> 404 (2.6ms) trace=00d5a2b6

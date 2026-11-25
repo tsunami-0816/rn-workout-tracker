@@ -1,0 +1,198 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-11-25",
+  "source": "08_测试/qa-automation（pytest -m p0 收集，nodeid 可单独重跑）",
+  "run_all": "cd 08_测试/qa-automation && py -3.11 -m pytest -m p0 -q",
+  "cases": [
+    {
+      "id": "P0-01",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_app_info_api.py::test_health_reports_db_up",
+      "title": "健康检查：status=up 且 db=up",
+      "api": "GET /api/health",
+      "preconditions": "后端 8094 已启动",
+      "asserts": ["HTTP 200/code 0", "data.status=up", "data.db=up", "uptimeSec>0", "traceId 头体一致"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_app_info_api.py::test_health_reports_db_up -q"
+    },
+    {
+      "id": "P0-02",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_app_info_api.py::test_version_matches_release_json",
+      "title": "版本接口与 release.json 对账（含 apkUrl 静态路径）",
+      "api": "GET /api/app/version",
+      "preconditions": "release.json 与已发布 APK 一致",
+      "asserts": ["version==release.version", "buildNo==release.buildNo", "apkUrl 含 /apk/", "notes 非空"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_app_info_api.py::test_version_matches_release_json -q"
+    },
+    {
+      "id": "P0-03",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_app_info_api.py::test_apk_static_file_is_reachable",
+      "title": "APK 静态托管可达（HEAD 不下载 77MB）",
+      "api": "HEAD {apkUrl}",
+      "preconditions": "backend/public/apk 下存在安装包",
+      "asserts": ["HTTP 200", "Content-Length>50MB"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_app_info_api.py::test_apk_static_file_is_reachable -q"
+    },
+    {
+      "id": "P0-04",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_workout_api.py::test_workout_list_returns_today_record",
+      "title": "训练列表：今日记录置顶且未结束",
+      "api": "GET /api/workouts?page=1&size=20",
+      "preconditions": "已 start 今日训练",
+      "asserts": ["total≥1", "list[0].id==今日 workoutId", "logDate=今天(上海)", "finished=false"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_workout_api.py::test_workout_list_returns_today_record -q"
+    },
+    {
+      "id": "P0-05",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_workout_api.py::test_start_is_idempotent_same_plan",
+      "title": "开练幂等：同日同计划复用同一 workout",
+      "api": "POST /api/workouts/start",
+      "preconditions": "用户已有今日训练",
+      "asserts": ["两次 workoutId 相同", "logDate 相同"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_workout_api.py::test_start_is_idempotent_same_plan -q"
+    },
+    {
+      "id": "P0-06",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_workout_api.py::test_detail_returns_plan_and_empty_sets",
+      "title": "训练详情：planId/logDate/未结束/sets 数组",
+      "api": "GET /api/workouts/{id}",
+      "preconditions": "今日训练存在",
+      "asserts": ["planId=开练计划", "logDate=今天", "finished=false", "sets 为数组"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_workout_api.py::test_detail_returns_plan_and_empty_sets -q"
+    },
+    {
+      "id": "P0-07",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_workout_api.py::test_create_set_recalculates_volume",
+      "title": "写组：容量=写前+weight×reps（done=true）",
+      "api": "POST /api/workouts/{id}/sets",
+      "preconditions": "清理同 (exercise,setNo) 槽位",
+      "asserts": ["setLog 字段回显", "totalVolume=before+400"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_workout_api.py::test_create_set_recalculates_volume -q"
+    },
+    {
+      "id": "P0-08",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_workout_api.py::test_create_set_same_group_three_times_keeps_one_row",
+      "title": "连点同组 3 次：仍 1 行、容量不叠加",
+      "api": "POST /api/workouts/{id}/sets",
+      "preconditions": "槽位清空",
+      "asserts": ["3 次 totalVolume 均=before+400", "详情仅 1 行"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_workout_api.py::test_create_set_same_group_three_times_keeps_one_row -q"
+    },
+    {
+      "id": "P0-09",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_workout_api.py::test_finish_returns_timestamp",
+      "title": "结束训练返回 finishedAt 且总量不变",
+      "api": "POST /api/workouts/{id}/finish",
+      "preconditions": "admin 今日训练",
+      "asserts": ["finishedAt 非空", "totalVolume=写前", "详情 finished=true"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_workout_api.py::test_finish_returns_timestamp -q"
+    },
+    {
+      "id": "P0-10",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_stats_api.py::test_weekly_returns_this_week_and_4_week_series",
+      "title": "本周统计：days/totalVolume + 近 4 周序列（周一为界）",
+      "api": "GET /api/stats/weekly",
+      "preconditions": "今日已开练",
+      "asserts": ["days∈1..7", "series 4 条", "weekStart 升序且为周一", "末条=本周一"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_stats_api.py::test_weekly_returns_this_week_and_4_week_series -q"
+    },
+    {
+      "id": "P0-11",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_stats_api.py::test_history_default_weeks_contains_today",
+      "title": "历史默认 4 周：含今日且日期降序",
+      "api": "GET /api/stats/history",
+      "preconditions": "今日已开练",
+      "asserts": ["list 非空", "list[0].logDate=今天", "planName 对账", "日期降序"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_stats_api.py::test_history_default_weeks_contains_today -q"
+    },
+    {
+      "id": "P0-12",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_admin_api.py::test_admin_workouts_masked_and_paged",
+      "title": "admin 全站训练列表：分页 + 手机号 3+4 掩码",
+      "api": "GET /api/admin/workouts",
+      "preconditions": "admin token；今日有记录",
+      "asserts": ["page/size 回显", "total≥1", "每行 phoneMasked 含 4 个 *", "响应无完整手机号"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_admin_api.py::test_admin_workouts_masked_and_paged -q"
+    },
+    {
+      "id": "P0-13",
+      "layer": "L2",
+      "nodeid": "testcases/l2_api/test_admin_api.py::test_admin_summary_counts",
+      "title": "admin 汇总：userCount/workoutCount/totalVolume",
+      "api": "GET /api/admin/stats/summary",
+      "preconditions": "admin token",
+      "asserts": ["userCount≥2", "workoutCount≥1", "totalVolume≥0"],
+      "run": "py -3.11 -m pytest testcases/l2_api/test_admin_api.py::test_admin_summary_counts -q"
+    },
+    {
+      "id": "P0-14",
+      "layer": "L3",
+      "nodeid": "testcases/l3_integration/test_pg_integration.py::test_concurrent_start_hits_unique_index_and_returns_same_id",
+      "title": "并发 5 线程 start：唯一索引兜底，DB 仅 1 行",
+      "api": "POST /api/workouts/start ×5",
+      "preconditions": "真实 PG 容器 rn-workout-pg 可 psql",
+      "asserts": ["5 次均返回同一 workoutId", "DB 今日该用户 workout 行数=1"],
+      "run": "py -3.11 -m pytest testcases/l3_integration/test_pg_integration.py::test_concurrent_start_hits_unique_index_and_returns_same_id -q"
+    },
+    {
+      "id": "P0-15",
+      "layer": "L3",
+      "nodeid": "testcases/l3_integration/test_pg_integration.py::test_upsert_idempotency_keeps_one_db_row",
+      "title": "同组 3 次写：DB set_logs 仅 1 行，total_volume 只加一次",
+      "api": "POST /api/workouts/{id}/sets ×3",
+      "preconditions": "真实 PG",
+      "asserts": ["set_logs 行数=1", "DB total_volume=before+300"],
+      "run": "py -3.11 -m pytest testcases/l3_integration/test_pg_integration.py::test_upsert_idempotency_keeps_one_db_row -q"
+    },
+    {
+      "id": "P0-16",
+      "layer": "L3",
+      "nodeid": "testcases/l3_integration/test_pg_integration.py::test_workout_ownership_isolated_in_db",
+      "title": "归属隔离：DB user_id 对账 + 跨用户读取 404",
+      "api": "GET /api/workouts/{id}（他人）",
+      "preconditions": "user 与 admin 各一条 today workout",
+      "asserts": ["DB user_id=当前用户", "plan_id 匹配", "跨用户 404/40401"],
+      "run": "py -3.11 -m pytest testcases/l3_integration/test_pg_integration.py::test_workout_ownership_isolated_in_db -q"
+    },
+    {
+      "id": "P0-17",
+      "layer": "L4",
+      "nodeid": "testcases/l4_e2e/test_main_flow.py::test_full_chain_login_to_admin_visibility",
+      "title": "端到端主链路：登录→计划→开练→2 组→统计→结束→admin 可见",
+      "api": "6 个端点串联",
+      "preconditions": "服务+PG 存活，seed 2/6/72",
+      "asserts": ["me 脱敏", "current=todayPlanId", "容量 +700 全程一致", "history 首条今天", "admin 列表含今日且无完整手机号"],
+      "run": "py -3.11 -m pytest testcases/l4_e2e/test_main_flow.py::test_full_chain_login_to_admin_visibility -q"
+    },
+    {
+      "id": "P0-18",
+      "layer": "L4",
+      "nodeid": "testcases/l4_e2e/test_main_flow.py::test_finish_locks_writes_end_to_end",
+      "title": "结束后写入被拒（40002，文案含「已结束」）",
+      "api": "POST /api/workouts/{id}/sets（结束后）",
+      "preconditions": "已完成 finish",
+      "asserts": ["HTTP 400/code 40002", "message 含「已结束」"],
+      "run": "py -3.11 -m pytest testcases/l4_e2e/test_main_flow.py::test_finish_locks_writes_end_to_end -q"
+    },
+    {
+      "id": "P0-19",
+      "layer": "L3",
+      "nodeid": "testcases/l3_integration/test_pg_integration.py::test_weekly_scope_is_this_week_not_rolling_7d",
+      "title": "本周口径回归（Q-001）：上周五的 100 容量不计入本周，只进 4 周序列",
+      "api": "GET /api/stats/weekly + DB 直查",
+      "preconditions": "真实 PG；直插上周五一条 total_volume=100 记录",
+      "asserts": ["days=1 且与 DB 本周 count 一致", "totalVolume<100 且与 DB 本周 sum 一致", "series[-2]=100"],
+      "run": "py -3.11 -m pytest testcases/l3_integration/test_pg_integration.py::test_weekly_scope_is_this_week_not_rolling_7d -q"
+    }
+  ]
+}

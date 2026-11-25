@@ -60,11 +60,19 @@ export class AdminController {
     return Math.min(50, Math.max(1, size));
   }
 
-  /** 日期筛选只接受 YYYY-MM-DD，其余 40001 指明字段 */
+  /**
+   * 日期筛选只接受 YYYY-MM-DD 且必须是真实存在的日历日（Q-012）：
+   * `2026-13-01` / `2026-02-30` 这类形状合法但日期不存在的值若透传给 Prisma 会抛 Invalid Date → 500，
+   * 这里用 UTC 往返比对拦成 40001，并指明 field 供前端标红。
+   */
   private assertDate(value: string | undefined, field: string): string | undefined {
     if (!value) return undefined;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       throw new AppError(ERR.PARAM_INVALID, `${field} 必须是 YYYY-MM-DD`, { field });
+    }
+    const parsed = new Date(`${value}T00:00:00.000Z`);
+    if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) {
+      throw new AppError(ERR.PARAM_INVALID, `${field} 不是真实存在的日期`, { field });
     }
     return value;
   }

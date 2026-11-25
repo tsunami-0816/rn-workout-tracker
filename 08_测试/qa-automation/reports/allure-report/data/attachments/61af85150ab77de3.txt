@@ -1,0 +1,1 @@
+[api] GET    /workouts                                  -> 200 (12.6ms) trace=27de85fc

@@ -1,0 +1,5 @@
+[api] POST   /workouts/start                            -> 200 (46.9ms) trace=8f61b585
+[api] POST   /workouts/start                            -> 200 (82.0ms) trace=4133e5eb
+[api] POST   /workouts/start                            -> 200 (97.1ms) trace=5fcd2805
+[api] POST   /workouts/start                            -> 200 (83.2ms) trace=ae457815
+[api] POST   /workouts/start                            -> 200 (98.8ms) trace=a0361d50

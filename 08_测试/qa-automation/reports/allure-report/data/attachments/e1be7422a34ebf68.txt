@@ -1,0 +1,1 @@
+[api] GET    /plans/abc/exercises                       -> 400 (4.8ms) trace=9386c49c

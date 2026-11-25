@@ -1,0 +1,1 @@
+[api] GET    /plans/3/exercises                         -> 404 (6.3ms) trace=b9f036e4

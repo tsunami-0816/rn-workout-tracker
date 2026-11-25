@@ -1,0 +1,1 @@
+[api] GET    /workouts/20                               -> 404 (9.7ms) trace=a9d8b93d

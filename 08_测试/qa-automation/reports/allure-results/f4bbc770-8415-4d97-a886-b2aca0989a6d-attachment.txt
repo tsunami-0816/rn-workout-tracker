@@ -1,0 +1,1 @@
+[api] GET    /stats/weekly                              -> 200 (10.9ms) trace=a7957780

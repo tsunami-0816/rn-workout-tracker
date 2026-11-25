@@ -1,0 +1,15 @@
+# QA 运行环境配置（第 8 步全量测试）
+# 说明：L2/L3/L4 打真实 8094 服务；服务不可达时整层 skip（CI 只收集），本地必跑。
+base_url: http://127.0.0.1:8094/api
+root_url: http://127.0.0.1:8094
+timeout_seconds: 10
+# 演示账号（seed 保证存在；密码字段不存在，验证码走 DEMO_CODE 环境变量）
+user_phone: 13900139000
+admin_phone: 13800138000
+demo_code: "123456"
+# 压测目标（perf_test.py 读取）
+perf_targets: /plans,/workouts?page=1&size=20
+# PG 容器（L3 直连断言用；降级说明见 perf-report.md 与 testcases/l3_integration/README）
+pg_container: rn-workout-pg
+pg_user: postgres
+pg_db: rn_workout

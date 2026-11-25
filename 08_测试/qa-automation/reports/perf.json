@@ -1,0 +1,94 @@
+{
+  "main": [
+    {
+      "path": "/plans",
+      "concurrency": 10,
+      "seconds": 10.0,
+      "requests": 746,
+      "rps": 74.59,
+      "error_rate": 0.0,
+      "p50_ms": 124.7,
+      "p95_ms": 219.3,
+      "p99_ms": 268.6,
+      "avg_ms": 134.4
+    },
+    {
+      "path": "/plans",
+      "concurrency": 20,
+      "seconds": 10.0,
+      "requests": 1164,
+      "rps": 116.39,
+      "error_rate": 0.0,
+      "p50_ms": 165.9,
+      "p95_ms": 239.2,
+      "p99_ms": 266.1,
+      "avg_ms": 173.3
+    },
+    {
+      "path": "/plans",
+      "concurrency": 50,
+      "seconds": 10.0,
+      "requests": 1105,
+      "rps": 110.49,
+      "error_rate": 0.0,
+      "p50_ms": 448.0,
+      "p95_ms": 610.1,
+      "p99_ms": 683.8,
+      "avg_ms": 457.3
+    },
+    {
+      "path": "/workouts?page=1&size=20",
+      "concurrency": 10,
+      "seconds": 10.0,
+      "requests": 1547,
+      "rps": 154.69,
+      "error_rate": 0.0,
+      "p50_ms": 62.5,
+      "p95_ms": 85.1,
+      "p99_ms": 110.5,
+      "avg_ms": 64.7
+    },
+    {
+      "path": "/workouts?page=1&size=20",
+      "concurrency": 20,
+      "seconds": 10.0,
+      "requests": 1784,
+      "rps": 178.39,
+      "error_rate": 0.0,
+      "p50_ms": 109.9,
+      "p95_ms": 146.2,
+      "p99_ms": 225.2,
+      "avg_ms": 112.5
+    },
+    {
+      "path": "/workouts?page=1&size=20",
+      "concurrency": 50,
+      "seconds": 10.0,
+      "requests": 1561,
+      "rps": 156.04,
+      "error_rate": 0.0,
+      "p50_ms": 314.1,
+      "p95_ms": 458.9,
+      "p99_ms": 503.9,
+      "avg_ms": 325.1
+    }
+  ],
+  "cross": [
+    {
+      "client": "urllib",
+      "concurrency": 20,
+      "requests": 466,
+      "rps": 93.17,
+      "p95_ms": 350.9,
+      "error_rate": 0.0
+    },
+    {
+      "client": "urllib",
+      "concurrency": 20,
+      "requests": 606,
+      "rps": 121.16,
+      "p95_ms": 244.1,
+      "error_rate": 0.0
+    }
+  ]
+}

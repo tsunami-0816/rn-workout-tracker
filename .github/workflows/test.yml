@@ -1,0 +1,110 @@
+name: test
+
+# 第 8 步 CI：Jest 单测 + pytest 全量（L1/L2/L4）+ Allure 报告
+# L3 中间件集成依赖宿主 docker 容器 rn-workout-pg（GitHub 托管 runner 无法 exec 本地容器），
+# 故 CI 用 -m "not l3_integration" 跳过，本地全量必跑（见 08_测试/全量测试用例清单.md §4）。
+# APK 静态包 77MB 不入库，CI 下 /apk HEAD 用 skip 记录（本地必跑断言）。
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rn_workout
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rn_workout"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/rn_workout?schema=public
+      JWT_SECRET: ci-only-secret
+      DEMO_CODE: "123456"
+      CI: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: 05_代码/backend/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install backend deps
+        working-directory: 05_代码/backend
+        run: npm ci
+
+      - name: Prisma generate + build
+        working-directory: 05_代码/backend
+        run: |
+          npx prisma generate
+          npm run build
+
+      - name: Migrate + seed（2 用户 / 6 计划 / 72 动作）
+        working-directory: 05_代码/backend
+        run: |
+          npm run prisma:migrate
+          npm run seed
+
+      - name: Jest unit + coverage（C06 覆盖率 ≥60%）
+        working-directory: 05_代码/backend
+        run: npm run test:cov
+
+      - name: Start backend
+        working-directory: 05_代码/backend
+        run: |
+          nohup npm run start:prod > /tmp/backend.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8094/api/health | grep -q '"db":"up"'; then
+              echo "backend ready"; exit 0
+            fi
+            sleep 2
+          done
+          echo "backend failed to start"; tail -50 /tmp/backend.log; exit 1
+
+      - name: Install pytest deps
+        run: pip install -r 08_测试/qa-automation/requirements.txt
+
+      - name: pytest L1/L2/L4（L3 需宿主容器，CI 跳过）
+        working-directory: 08_测试/qa-automation
+        run: python -m pytest -q -m "not l3_integration"
+
+      - name: Allure HTML
+        if: always()
+        run: |
+          npm i -g allure-commandline
+          allure generate 08_测试/qa-automation/reports/allure-results -o 08_测试/qa-automation/reports/allure-report --clean
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: 08_测试/qa-automation/reports/allure-results
+          retention-days: 7
+
+      - name: Upload Allure HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: 08_测试/qa-automation/reports/allure-report
+          retention-days: 7
