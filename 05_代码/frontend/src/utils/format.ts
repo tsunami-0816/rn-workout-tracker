@@ -71,3 +71,9 @@ export function clamp(value: number, min: number, max: number): number {
 export function setVolume(weight: number, reps: number): number {
   return Math.round(weight * reps * 100) / 100;
 }
+
+/** 组次主按钮文案：训练结束后锁定，不再暗示「可取消」（Q-009） */
+export function setRowActionLabel(done: boolean, locked: boolean): string {
+  if (locked) return done ? '已完成（已锁定）' : '未完成（已锁定）';
+  return done ? '已完成 · 点击取消' : '完成这组';
+}

@@ -164,7 +164,11 @@ export function LogScreen(): React.JSX.Element {
   };
 
   const toggleDone = (row: DraftRow): void => {
-    if (workoutFinished || row.status === 'pending') return;
+    if (workoutFinished) {
+      showToast('本次训练已结束，记录已锁定，不能再改', 'error');
+      return;
+    }
+    if (row.status === 'pending') return;
     const nextDone = !row.done;
     updateRow(row.setNo, { done: nextDone });
     void persistRow({ ...row, done: nextDone }, nextDone);

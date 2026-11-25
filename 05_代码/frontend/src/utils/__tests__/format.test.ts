@@ -3,6 +3,7 @@ import {
   isoWeekRange,
   isValidPhone,
   maskPhone,
+  setRowActionLabel,
   setVolume,
   shortDate,
   stepReps,
@@ -79,5 +80,21 @@ describe('步进约束与容量', () => {
 describe('shortDate', () => {
   it('输出 MM/DD', () => {
     expect(shortDate('2026-11-23')).toBe('11/23');
+  });
+});
+
+describe('setRowActionLabel（Q-009 回归）', () => {
+  it('训练中：未完成提示完成、已完成提示可取消', () => {
+    expect(setRowActionLabel(false, false)).toBe('完成这组');
+    expect(setRowActionLabel(true, false)).toBe('已完成 · 点击取消');
+  });
+
+  it('训练结束后：不再出现「点击取消」字样', () => {
+    expect(setRowActionLabel(true, true)).toBe('已完成（已锁定）');
+    expect(setRowActionLabel(false, true)).toBe('未完成（已锁定）');
+  });
+
+  it('锁定文案不含可操作暗示', () => {
+    expect(setRowActionLabel(true, true)).not.toContain('取消');
   });
 });

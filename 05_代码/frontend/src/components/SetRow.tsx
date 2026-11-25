@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme/tokens';
-import { formatVolume } from '../utils/format';
+import { formatVolume, setRowActionLabel } from '../utils/format';
 import { Stepper } from './Stepper';
 
 export type RowStatus = 'idle' | 'pending' | 'saved' | 'error';
@@ -101,11 +101,11 @@ export function SetRowCard({
           accessibilityRole="checkbox"
           accessibilityState={{ checked: row.done, disabled }}
           accessibilityLabel={`第 ${row.setNo} 组完成`}
-          onPress={disabled ? undefined : onToggle}
+          onPress={onToggle}
           style={[styles.check, row.done && styles.checkDone, disabled && styles.checkDisabled]}
         >
           <Text style={[styles.checkText, row.done && styles.checkTextDone]}>
-            {row.done ? '已完成 · 点击取消' : '完成这组'}
+            {setRowActionLabel(row.done, disabled)}
           </Text>
         </Pressable>
       )}

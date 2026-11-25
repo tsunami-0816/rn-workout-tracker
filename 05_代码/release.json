@@ -1,6 +1,6 @@
 {
-    "version":  "1.0.1",
-    "buildNo":  2,
-    "apkUrl":  "http://192.168.0.108:8094/apk/rn-workout-1.0.1.apk",
-    "notes":  "修复 HTTP 明文与接口地址；覆盖升级保留登录态"
+    "version":  "1.0.2",
+    "buildNo":  3,
+    "apkUrl":  "http://192.168.0.108:8094/apk/rn-workout-1.0.2.apk",
+    "notes":  "训练结束后组次锁定并提示（Q-009）；管理入口改名「管理后台」（Q-010）"
 }

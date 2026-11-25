@@ -96,18 +96,18 @@ export function ProfileScreen(): React.JSX.Element {
         {role === 'admin' ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="进入全站打卡"
+            accessibilityLabel="进入管理后台"
             onPress={() => navigation.navigate('Admin')}
             style={({ pressed }) => [styles.adminEntry, pressed && styles.pressed]}
           >
             <View style={styles.adminMain}>
-              <Text style={styles.adminTitle}>全站打卡</Text>
-              <Text style={styles.adminSub}>管理员可见 · 手机号已脱敏 · 只读</Text>
+              <Text style={styles.adminTitle}>管理后台</Text>
+              <Text style={styles.adminSub}>全站打卡 · 管理员可见 · 手机号已脱敏 · 只读</Text>
             </View>
             <Text style={styles.adminAction}>进入</Text>
           </Pressable>
         ) : (
-          <Text style={styles.memberNote}>普通用户没有全站打卡入口；即使手改路由，服务端也会返回 403。</Text>
+          <Text style={styles.memberNote}>普通用户没有管理后台入口；即使手改路由，服务端也会返回 403。</Text>
         )}
 
         <View style={styles.footer}>
