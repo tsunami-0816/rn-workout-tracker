@@ -4,7 +4,7 @@
 > **R2 复审（2026-11-25）：🟢 代码通过**（P0=0 / P1=0，`design_impl_check --stage 6` = 37✅/13⚠️/0❌ exit 0）；关键项仍需具名确认，详见文末「复审轮 R2」。下方 R1 返工记录原样保留。
 - reviewer 上下文：**新对话 / 独立 reviewer**（未参与 5A、5B 编写；本对话只读代码与跑验证命令，未改任何产品代码）
 - 审查范围：`05_代码/backend`（auth / workouts / sets / plans / stats / admin / app-info / common / trace）、`05_代码/frontend`（api / storage / store / hooks / screens / components / config / tokens）、`06.5_契约/openapi.json`、`scripts/`、`_设计实施映射表.md`、`04_任务拆解与开发规范.md`
-- approved_commit：**—**（项目目录 0 个文件被 git 跟踪，`WORKFLOW_测试` 仓 HEAD `82af601` 不含本次代码；关键项审批无法绑定 commit，建议修复后先 commit 再确认）
+- approved_commit：**`4b357a5`（2026-11-25 用户具名重新确认，见文末「G5 重新确认记录」）** —— 历史锚点 `e333d0b` → `cfa5760` → `4b357a5`，每次均因代码 commit 变动作废重锚
 - 映射表复核：**50/50 行全查，降级 4 行**（D-03 / D-26 / D-28 / D-31，已直接改正状态与证据列）
 - 失败记账：`scripts/log_failure.py --step 5.5 --category 评审打回 --rule R9` 已写入 `_失败日志.md`（累计 1 条）
 
@@ -316,12 +316,12 @@
 
 | 模块 | 风险级别 | 改动（已落地） | 影响链路 | 回滚方式 | approved_commit |
 |---|---|---|---|---|---|
-| 鉴权与权限 | 关键 | JWT / 全局守卫 / @Public / @Roles + 前端仅 40101 清态 | 20 端点 | revert `auth/**`、`guards/**`、`client.ts` | `cfa5760` · 2026-11-25 用户确认 |
-| Schema / 迁移 | 关键 | 5 表 + `uk_workout_user_date` 新唯一索引（迁移 `20261124090000`） | 全后端 / 统计 / 记录 | 恢复旧 schema + `prisma migrate reset` | `cfa5760` · 2026-11-25 用户确认 |
-| 并发 / 幂等 / 事务 | 关键 | set upsert + 事务 SUM；start P2002 重查 | 记录页 / admin 统计 | revert `workout.service.ts` | `cfa5760` · 2026-11-25 用户确认 |
-| 版本 / 发布链路 | 关键 | release.json 文件优先 + 向上找根 + `/apk` 静态托管 + EAS 1.0.0/1.0.1 | 更新弹窗 / 安装 | 恢复旧 `version.service.ts`，保留旧 APK | `cfa5760` · 2026-11-25 用户确认 |
-| 启动脚本 / 端口 | 关键 | start_all / stop_all / preflight（R1 后未改） | 本机联调 | 保留旧脚本 | `cfa5760` · 2026-11-25 用户确认 |
-| 密钥 / 环境 | 关键 | `.env.example` / `.gitignore`；`.env`、keystore、`credentials.json` 均未入库（`git ls-files` 0 命中） | 推仓 / 交付 | 恢复旧模板 | `cfa5760` · 2026-11-25 用户确认 |
+| 鉴权与权限 | 关键 | JWT / 全局守卫 / @Public / @Roles + 前端仅 40101 清态 | 20 端点 | revert `auth/**`、`guards/**`、`client.ts` | `4b357a5` · 2026-11-25 重新确认 |
+| Schema / 迁移 | 关键 | 5 表 + `uk_workout_user_date` 新唯一索引（迁移 `20261124090000`） | 全后端 / 统计 / 记录 | 恢复旧 schema + `prisma migrate reset` | `4b357a5` · 2026-11-25 重新确认 |
+| 并发 / 幂等 / 事务 | 关键 | set upsert + 事务 SUM；start P2002 重查 | 记录页 / admin 统计 | revert `workout.service.ts` | `4b357a5` · 2026-11-25 重新确认 |
+| 版本 / 发布链路 | 关键 | release.json 文件优先 + 向上找根 + `/apk` 静态托管 + EAS 1.0.0/1.0.1 | 更新弹窗 / 安装 | 恢复旧 `version.service.ts`，保留旧 APK | `4b357a5` · 2026-11-25 重新确认 |
+| 启动脚本 / 端口 | 关键 | start_all / stop_all / preflight（R1 后未改） | 本机联调 | 保留旧脚本 | `4b357a5` · 2026-11-25 重新确认 |
+| 密钥 / 环境 | 关键 | `.env.example` / `.gitignore`；`.env`、keystore、`credentials.json` 均未入库（`git ls-files` 0 命中） | 推仓 / 交付 | 恢复旧模板 | `4b357a5` · 2026-11-25 重新确认 |
 
 ## G5 确认记录（2026-11-25 12:10）
 
@@ -341,3 +341,17 @@
 - 无阻塞项回流 5A/5B；6 类关键项已按 `cfa5760` 具名确认，G5 闭环。
 - 下一步：看板 5.5 置「已完成」→ 第 6 步阶段一（Agent 自启动 + P0 主路径探活），阶段二再交用户走主流程。
 
+
+## G5 重新确认记录（2026-11-25 · 基线 `4b357a5`）
+
+| 项 | 值 |
+|---|---|
+| 确认人 | 用户（本会话） |
+| 确认口令 | 「确认 4b357a5 关键项，继续项目 rn-mobile-app-release」 |
+| approved_commit | `4b357a5`（`git rev-parse --short HEAD` 实查代码提交；确认时 HEAD 为 `d48ee69`，仅文档 + 探活脚本） |
+| 确认范围 | 六类关键项：鉴权与权限 / Schema 迁移 / 并发幂等事务 / 版本发布链路 / 启动脚本端口 / 密钥环境 |
+| 本轮实质变动 | 仅「版本发布链路」：1.0.2/build3、两份 release.json 与 apkUrl；其余五类代码未动（`git show --stat 4b357a5` = 8 文件，+45/−18） |
+| 工作树核对 | `git diff --stat -- 05_代码/** 06.5_契约/** release.json docker-compose.yml` = 空（代码与契约零改动） |
+| 作废条件 | `05_代码/**`、`06.5_契约/**`、`release.json`、`docker-compose.yml` 任一改动并产生新 commit → 本审批作废；纯文档/证据 commit（如 `d48ee69`）不改变代码基线，锚点仍为 `4b357a5` |
+| 生效后果 | 5.5 复核闭环（R3 增量 🟢）→ 第 7 步全链路联调可正式开工；10.0 完成门禁读取本锚点 |
+| 历史链 | `e333d0b`（D-37~D-41，作废）→ `cfa5760`（Q-009/Q-010 前，作废）→ **`4b357a5`（现行）** |
