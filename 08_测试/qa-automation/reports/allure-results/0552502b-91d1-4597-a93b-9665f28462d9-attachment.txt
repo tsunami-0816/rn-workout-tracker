@@ -1,1 +1,0 @@
-[api] GET    /auth/me                                   -> 200 (7.4ms) trace=d8f091c4

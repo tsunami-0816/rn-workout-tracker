@@ -1,1 +1,0 @@
-[api] POST   /auth/send-code                            -> 200 (3.4ms) trace=3c93793e

@@ -1,1 +1,0 @@
-[api] GET    /admin/users                               -> 403 (3.3ms) trace=c47ca548

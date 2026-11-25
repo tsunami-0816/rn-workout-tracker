@@ -1,4 +1,0 @@
-[api] GET    /workouts/20                               -> 200 (9.4ms) trace=39d60422
-[api] GET    /workouts/20                               -> 200 (9.3ms) trace=a3407194
-[api] POST   /workouts/20/sets                          -> 200 (28.4ms) trace=48aba767
-[api] DELETE /workouts/20/sets/86                       -> 200 (23.2ms) trace=3937c86b

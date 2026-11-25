@@ -1,6 +1,0 @@
-[setup] 清掉今日训练 2 条；测试号 13600000999 已重置
-[api] GET    /auth/me                                   -> 200 (9.5ms) trace=0015c1a1
-[api] GET    /plans                                     -> 200 (15.6ms) trace=1857a721
-[api] GET    /plans/3/exercises                         -> 200 (8.0ms) trace=8ad2e40d
-[api] POST   /workouts/start                            -> 200 (24.0ms) trace=c88627ed
-[api] GET    /admin/workouts                            -> 200 (15.3ms) trace=93778595

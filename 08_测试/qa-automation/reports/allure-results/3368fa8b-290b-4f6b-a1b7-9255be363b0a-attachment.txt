@@ -1,1 +1,0 @@
-[api] POST   /workouts/start                            -> 400 (4.6ms) trace=eb73285b

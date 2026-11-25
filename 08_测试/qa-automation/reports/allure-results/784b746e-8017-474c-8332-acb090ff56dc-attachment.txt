@@ -1,1 +1,0 @@
-[api] GET    /app/version                               -> 200 (6.1ms) trace=5e223653

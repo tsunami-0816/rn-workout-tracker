@@ -1,1 +1,0 @@
-[api] PATCH  /workouts/20/sets/999999                   -> 404 (7.6ms) trace=9ac8720d

@@ -1,1 +1,0 @@
-[api] GET    /plans/current                             -> 200 (10.7ms) trace=fedb2a40

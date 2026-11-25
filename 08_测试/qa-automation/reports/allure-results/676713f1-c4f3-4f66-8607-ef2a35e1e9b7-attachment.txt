@@ -1,1 +1,0 @@
-[api] GET    /admin/stats/summary                       -> 401 (2.7ms) trace=7cefc630

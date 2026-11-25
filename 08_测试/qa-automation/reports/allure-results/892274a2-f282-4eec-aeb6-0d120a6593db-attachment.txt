@@ -1,3 +1,0 @@
-[api] GET    /plans                                     -> 200 (12.6ms) trace=c014f710
-[api] GET    /plans/current                             -> 404 (6.3ms) trace=46e1ac1c
-[api] POST   /workouts/start                            -> 404 (6.2ms) trace=9a01beb3

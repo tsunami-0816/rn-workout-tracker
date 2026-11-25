@@ -28,3 +28,8 @@ logs/
 *.tmp
 .DS_Store
 Thumbs.db
+
+# 运行期生成物（快照 allure-report 保留）
+08_测试/qa-automation/reports/allure-results/
+.run/
+

@@ -1,2 +1,0 @@
-[api] POST   /workouts/19/finish                        -> 200 (5.6ms) trace=4fa96df3
-[api] GET    /workouts/19                               -> 200 (9.6ms) trace=05269386

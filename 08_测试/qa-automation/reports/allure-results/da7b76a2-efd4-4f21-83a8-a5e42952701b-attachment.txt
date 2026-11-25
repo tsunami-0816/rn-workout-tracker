@@ -1,1 +1,0 @@
-[api] GET    /stats/weekly                              -> 401 (4.2ms) trace=ead8449b

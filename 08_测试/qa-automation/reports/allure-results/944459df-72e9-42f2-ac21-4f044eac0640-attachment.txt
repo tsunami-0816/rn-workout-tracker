@@ -1,1 +1,0 @@
-[api] POST   /auth/login                                -> 400 (5.0ms) trace=42a46e98
