@@ -1,0 +1,33 @@
+{
+  "project": "rn-mobile-app-release",
+  "title": "rn-workout-tracker（rn-mobile-app-release）· 训练打卡双端 App（Expo RN + NestJS）",
+  "tags": ["mobile", "frontend", "fullstack"],
+  "one_liner": "训练打卡双端 App：Expo/RN + NestJS/PostgreSQL，5 表 20 端点，APK 真机可装、可覆盖升级",
+  "period": "2026.11",
+  "github": "https://github.com/tsunami-0816/rn-workout-tracker",
+  "local_path": "project/工作流测试/projects/rn-mobile-app-release/",
+  "material_path": "工作流测试/projects/rn-mobile-app-release/10_交付/简历项目描述.md",
+  "tech": "Expo 58 / React Native 0.88 / TypeScript / NestJS 12 / Prisma 7 / PostgreSQL / JWT+RBAC / Jest / pytest / EAS Build",
+  "bullets": [
+    "Expo 58 + RN 0.88 搭 7 屏双端 App，AuthStack/MainTabs/Stack 共用 apiClient 单出口（8s 超时、GET 重试一次、401 清登录态）；EAS 云端出 Android APK，真机安装并完成 1.0.0→1.0.1 覆盖升级，登录态保留",
+    "NestJS + Prisma 建 5 表 9 唯一索引，用 (user_id, log_date) 与组次复合唯一把「一天一练/同组幂等」压到数据库层；19 路径 / 20 operations，OpenAPI 契约前端 18 处调用 0 越界",
+    "组次乐观回填、失败行标红可重试；结束训练显式「已完成（已锁定）」+ 中文 Toast，修掉真机「点了没反应」；统计按本地周一起算参数化 $queryRaw，4 周柱无数据周显示 0",
+    "pytest 127 passed / 1 skipped，Jest 77 passed / 10 suites；联调探针 76 PASS / 0 FAIL；20 并发 /plans p95 239ms、/workouts 146ms、版本接口 30ms",
+    "安全 P0/P1=0：密钥 813 文件 0 生产命中、SAST 0、渗透 37/38（唯一 FAIL 为 P3 X-Powered-By）；20 条 deferred 边界全披露（含 50 并发 p95 610/459ms、分支覆盖 51.07%）"
+  ],
+  "scenes": ["React Native/Expo 跨端 App", "NestJS/Node 后端", "PostgreSQL/Prisma 建模", "JWT/RBAC 权限", "EAS 打包与 App 内升级", "真机验收与发布"],
+  "jd_angle": "JD 职责词：真实上线 App 开发、RN/Flutter 跨端、Node 后端、数据库建模、打包发布与版本升级",
+  "experience": {
+    "period": "2026.11",
+    "paras": [
+      "背景：简历缺「生产级移动 App」证据，G8 六份 JD 把 RN、Node 后端、PostgreSQL 建模、权限、发布链写成 must；约束是 16GB 内存、无 Mac、无 Android 开发者账号，后端与 Metro 跑本机，APK 交给 EAS 云端出包，iOS 停在 Expo Go。",
+      "做法：Expo 58 + React Navigation 搭 AuthStack/MainTabs/Stack 共 7 屏，页面共用 apiClient 单出口；NestJS + Prisma 建 5 表，用 (user_id, log_date) 与 (workout_log_id, exercise_id, set_no) 复合唯一实现一天一练与组次幂等；组次乐观回填、失败可重试，结束态显示「已完成（已锁定）」+ 中文提示；版本读 release.json，后端托管 /apk 支撑 App 内更新，EAS 构建放在仓库外纯 ASCII 目录绕开 Windows 子目录路径问题。",
+      "验证：pytest 127 passed / 1 skipped、Jest 77 passed / 10 suites、联调探针 76 PASS / 0 FAIL、20 并发 /plans p95 239ms / /workouts 146ms；安全 P0/P1=0；APK 1.0.2 真机安装 + 1.0.0→1.0.1 覆盖升级登录态保留。"
+    ],
+    "outcome": "交付 1.0.2 / build 3（APK 77,412,373B，SHA256 一致），GitHub 已开源；20 条 deferred 边界如实披露，明确「演示/局域网可用、不可直接上生产」。"
+  },
+  "gap_code": "G8",
+  "gap_close_note": "**G8 闭环**：rn-workout-tracker 2026-11-25 step10 门禁 29/29 全绿、APK 1.0.2 + GitHub 已推；覆盖连帆/九凌/比特鹰/逐爱/统一众智/灵光跃动 6 份 JD",
+  "index_no": 22,
+  "bullet_no": null
+}
