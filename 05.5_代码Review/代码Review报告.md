@@ -4,7 +4,7 @@
 > **R2 复审（2026-11-25）：🟢 代码通过**（P0=0 / P1=0，`design_impl_check --stage 6` = 37✅/13⚠️/0❌ exit 0）；关键项仍需具名确认，详见文末「复审轮 R2」。下方 R1 返工记录原样保留。
 - reviewer 上下文：**新对话 / 独立 reviewer**（未参与 5A、5B 编写；本对话只读代码与跑验证命令，未改任何产品代码）
 - 审查范围：`05_代码/backend`（auth / workouts / sets / plans / stats / admin / app-info / common / trace）、`05_代码/frontend`（api / storage / store / hooks / screens / components / config / tokens）、`06.5_契约/openapi.json`、`scripts/`、`_设计实施映射表.md`、`04_任务拆解与开发规范.md`
-- approved_commit：**`4b357a5`（2026-11-25 用户具名重新确认，见文末「G5 重新确认记录」）** —— 历史锚点 `e333d0b` → `cfa5760` → `4b357a5`，每次均因代码 commit 变动作废重锚
+- approved_commit：**`70659c1`（2026-11-25 用户具名确认，见文末「G5 重新确认记录 · 基线 70659c1」）** —— 历史锚点 `e333d0b` → `cfa5760` → `4b357a5` → `70659c1`，每次均因代码 commit 变动作废重锚
 - 映射表复核：**50/50 行全查，降级 4 行**（D-03 / D-26 / D-28 / D-31，已直接改正状态与证据列）
 - 失败记账：`scripts/log_failure.py --step 5.5 --category 评审打回 --rule R9` 已写入 `_失败日志.md`（累计 1 条）
 
@@ -355,3 +355,18 @@
 | 作废条件 | `05_代码/**`、`06.5_契约/openapi.json`、`release.json`、`docker-compose.yml` 任一改动并产生新 commit → 本审批作废；纯文档/证据 commit（如 `d48ee69`、`d712777`）不改变代码基线与契约本体，锚点仍为 `4b357a5` |
 | 生效后果 | 5.5 复核闭环（R3 增量 🟢）→ 第 7 步全链路联调 R1 已按 76/0 收口；10.0 完成门禁读取本锚点 |
 | 历史链 | `e333d0b`（D-37~D-41，作废）→ `cfa5760`（Q-009/Q-010 前，作废）→ **`4b357a5`（现行）** |
+
+## G5 重新确认记录（2026-11-25 · 基线 `70659c1`）
+
+| 项 | 值 |
+|---|---|
+| 确认人 | 用户（本会话，按需确认弹窗选择「确认 70659c1 关键项」） |
+| 确认口令 | 「确认 70659c1 关键项」 |
+| approved_commit | `70659c1`（完整 `70659c184739350ecaee85d2ad70783c3da317a1`，2026-11-25 17:52:09） |
+| 确认时机 | 第 8 步全量测试完成、Q-012 修复已入 commit 后；HEAD 为 `7c1e634`（仅文档提交） |
+| 本轮实质变动 | 仅 `05_代码/backend/src/admin/admin.controller.ts` +9/−1（Q-012 日历日校验）与 `admin.controller.spec.ts` / `paths.spec.ts` 2 个新 spec；另新增 `08_测试` 四层框架、`.github/workflows/test.yml`、`scripts/stage1_probe.ps1` |
+| 六类关键项核对 | ① 鉴权 guards 0 diff（40101/40301 语义不变）② `prisma/migrations` 与 `schema.prisma` 0 diff ③ `workouts/plans/stats` 服务 0 diff ④ `release.json`（两份）/`eas.json`/`app.json` 0 diff，`/api/app/version` 实返回 1.0.2/build3 ⑤ 启动脚本 0 diff，5434/8094/8096 实跑 ⑥ `.env`/keystore 仍未入库，`[测试上下文]` 唯一命中原样保留（伪造 token） |
+| 工作树核对 | `git diff --stat 4b357a5 70659c1` 代码面仅上述 3 文件；`git diff 70659c1 HEAD -- 05_代码 06.5_契约 release.json docker-compose.yml` = 空 |
+| 作废条件 | `05_代码/**`、`06.5_契约/openapi.json`、`release.json`、`docker-compose.yml` 任一改动并产生新 commit → 作废重锚；纯文档/证据 commit 不作废 |
+| 生效后果 | 第 8.5 步安全扫描按 `70659c1` 执行（P0/P1=0）→ 待用户复核放行第 9 步；10.0 完成门禁读本锚点 |
+| 历史链 | `e333d0b`（作废）→ `cfa5760`（作废）→ `4b357a5`（作废）→ **`70659c1`（现行）** |

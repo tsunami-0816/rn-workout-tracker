@@ -1,0 +1,225 @@
+{
+  "ts": "2026-11-25T10:06:38.201Z",
+  "base": "http://127.0.0.1:8094",
+  "total": 36,
+  "pass": 32,
+  "fail": 4,
+  "results": [
+    {
+      "id": "P-01",
+      "name": "演示账号登录取 JWT",
+      "pass": true,
+      "detail": "status=200 code=0"
+    },
+    {
+      "id": "P-02",
+      "name": "登录响应不含密码/哈希/原始手机号",
+      "pass": true,
+      "detail": "bodyKeys=token,expiresIn,user"
+    },
+    {
+      "id": "U-/api/plans",
+      "name": "未带 token 访问 /api/plans",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "U-/api/auth/me",
+      "name": "未带 token 访问 /api/auth/me",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "U-/api/workouts",
+      "name": "未带 token 访问 /api/workouts",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "U-/api/stats/weekly",
+      "name": "未带 token 访问 /api/stats/weekly",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "U-/api/admin/users",
+      "name": "未带 token 访问 /api/admin/users",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "U-/api/admin/workouts",
+      "name": "未带 token 访问 /api/admin/workouts",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "U-/api/admin/stats/summary",
+      "name": "未带 token 访问 /api/admin/stats/summary",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "J-01",
+      "name": "篡改签名 JWT 被拒",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "J-02",
+      "name": "alg=none 伪造 JWT 被拒",
+      "pass": true,
+      "detail": "status=401 code=40101"
+    },
+    {
+      "id": "V-01",
+      "name": "普通用户调用 /admin/users",
+      "pass": true,
+      "detail": "status=403 code=40301"
+    },
+    {
+      "id": "V-02",
+      "name": "普通用户调用 /admin/stats/summary",
+      "pass": true,
+      "detail": "status=403 code=40301"
+    },
+    {
+      "id": "V-03",
+      "name": "管理员调用 /admin/users 正常",
+      "pass": true,
+      "detail": "status=200"
+    },
+    {
+      "id": "W-000000",
+      "name": "错误验证码 000000 被拒且无 token",
+      "pass": true,
+      "detail": "status=401 code=40102"
+    },
+    {
+      "id": "W-12345",
+      "name": "错误验证码 12345 被拒且无 token",
+      "pass": true,
+      "detail": "status=400 code=40001"
+    },
+    {
+      "id": "W-admin",
+      "name": "错误验证码 admin 被拒且无 token",
+      "pass": true,
+      "detail": "status=400 code=40001"
+    },
+    {
+      "id": "W-phone",
+      "name": "非手机号形态被 40001 拦截",
+      "pass": true,
+      "detail": "status=400 code=40001"
+    },
+    {
+      "id": "H-01",
+      "name": "A 读 B 的训练详情被拒",
+      "pass": false,
+      "detail": "起始失败 A={\"field\":\"planId\"} B={\"field\":\"planId\"}"
+    },
+    {
+      "id": "S-01",
+      "name": "登录手机号注入串被校验拦截",
+      "pass": true,
+      "detail": "status=400 code=40001"
+    },
+    {
+      "id": "S-02",
+      "name": "admin 未知参数注入串被忽略（不 500 / 不倒库）",
+      "pass": true,
+      "detail": "status=200 rows=3"
+    },
+    {
+      "id": "S-03",
+      "name": "分页参数注入串被 ParseInt 拦截",
+      "pass": false,
+      "detail": "status=200 code=0"
+    },
+    {
+      "id": "S-04",
+      "name": "admin 日期参数注入串被 assertDate 拦截",
+      "pass": false,
+      "detail": "status=200 code=0"
+    },
+    {
+      "id": "T-/apk/../.env",
+      "name": "路径穿越 /apk/../.env 不可读",
+      "pass": true,
+      "detail": "status=404"
+    },
+    {
+      "id": "T-/apk/%2e%2e/.env",
+      "name": "路径穿越 /apk/%2e%2e/.env 不可读",
+      "pass": true,
+      "detail": "status=404"
+    },
+    {
+      "id": "T-/apk/..%2f.env",
+      "name": "路径穿越 /apk/..%2f.env 不可读",
+      "pass": true,
+      "detail": "status=404"
+    },
+    {
+      "id": "T-/apk/../../05_代码/backend/.env",
+      "name": "路径穿越 /apk/../../05_代码/backend/.env 不可读",
+      "pass": true,
+      "detail": "status=404"
+    },
+    {
+      "id": "T-/apk/",
+      "name": "路径穿越 /apk/ 不可读",
+      "pass": true,
+      "detail": "status=404"
+    },
+    {
+      "id": "I-01",
+      "name": "未知路径不泄露堆栈/内部路径",
+      "pass": true,
+      "detail": "status=404 body={\"code\":40401,\"message\":\"Cannot GET /api/not-exist-xyz\",\"data\":null,\"traceId\":\"1"
+    },
+    {
+      "id": "I-02",
+      "name": "未暴露 X-Powered-By",
+      "pass": false,
+      "detail": "x-powered-by=Express"
+    },
+    {
+      "id": "I-03",
+      "name": "/me 手机号脱敏",
+      "pass": true,
+      "detail": "phoneMasked=139****9000"
+    },
+    {
+      "id": "I-04",
+      "name": "分页 size 上限钳制（≤50）",
+      "pass": true,
+      "detail": "status=200 rows=1"
+    },
+    {
+      "id": "I-05",
+      "name": "Swagger 文档仅 dev 暴露（记录口径）",
+      "pass": true,
+      "detail": "status=200 NODE_ENV=development（生产构建不注册）"
+    },
+    {
+      "id": "R-01",
+      "name": "60s 内重复发码被 42901 拦截",
+      "pass": true,
+      "detail": "first=200 second=429/42901"
+    },
+    {
+      "id": "C-01",
+      "name": "跨域陌生 Origin 不下发 ACAO",
+      "pass": true,
+      "detail": "acao=null"
+    },
+    {
+      "id": "C-02",
+      "name": "本地 dev Origin 允许",
+      "pass": true,
+      "detail": "acao=http://localhost:3000"
+    }
+  ]
+}
