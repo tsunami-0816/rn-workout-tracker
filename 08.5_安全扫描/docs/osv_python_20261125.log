@@ -1,0 +1,5 @@
+﻿pytest@8.3.3 -> 2 vuln(s) GHSA-6w46-j5rx-g56g,PYSEC-2026-1845
+allure-pytest@2.13.5 -> 0 vuln(s) 
+httpx@0.27.2 -> 0 vuln(s) 
+PyYAML@6.0.2 -> 0 vuln(s) 
+[summary] [{"name":"pytest","version":"8.3.3","count":2,"ids":["GHSA-6w46-j5rx-g56g","PYSEC-2026-1845"],"severities":["MODERATE",null]},{"name":"allure-pytest","version":"2.13.5","count":0,"ids":[],"severities":[]},{"name":"httpx","version":"0.27.2","count":0,"ids":[],"severities":[]},{"name":"PyYAML","version":"6.0.2","count":0,"ids":[],"severities":[]}]

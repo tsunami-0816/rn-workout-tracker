@@ -1,0 +1,41 @@
+[baseline] users=3 workouts=2 sets=2 ids=19,20
+PASS | P-01 演示账号登录取 JWT | status=200 code=0
+PASS | P-02 登录响应不含密码/哈希/原始手机号 | bodyKeys=token,expiresIn,user
+PASS | U-/api/plans 未带 token 访问 /api/plans | status=401 code=40101
+PASS | U-/api/auth/me 未带 token 访问 /api/auth/me | status=401 code=40101
+PASS | U-/api/workouts 未带 token 访问 /api/workouts | status=401 code=40101
+PASS | U-/api/stats/weekly 未带 token 访问 /api/stats/weekly | status=401 code=40101
+PASS | U-/api/admin/users 未带 token 访问 /api/admin/users | status=401 code=40101
+PASS | U-/api/admin/workouts 未带 token 访问 /api/admin/workouts | status=401 code=40101
+PASS | U-/api/admin/stats/summary 未带 token 访问 /api/admin/stats/summary | status=401 code=40101
+PASS | J-01 篡改签名 JWT 被拒 | status=401 code=40101
+PASS | J-02 alg=none 伪造 JWT 被拒 | status=401 code=40101
+PASS | V-01 普通用户调用 /admin/users | status=403 code=40301
+PASS | V-02 普通用户调用 /admin/stats/summary | status=403 code=40301
+PASS | V-03 管理员调用 /admin/users 正常 | status=200
+PASS | W-000000 错误验证码 000000 被拒且无 token | status=401 code=40102
+PASS | W-12345 错误验证码 12345 被拒且无 token | status=400 code=40001
+PASS | W-admin 错误验证码 admin 被拒且无 token | status=400 code=40001
+PASS | W-phone 非手机号形态被 40001 拦截 | status=400 code=40001
+PASS | H-01 A 读/结束 B 的训练被 40401 拒绝 | A#20 读 B#19=404/40401 finish=404/40401
+PASS | S-01 登录手机号注入串被校验拦截 | status=400 code=40001
+PASS | S-02 admin 未知参数注入串被忽略（不 500 / 不倒库） | status=200 rows=3
+PASS | S-03 分页参数注入串被 parseInt 强转为整数、无注入效果 | status=200 page=1（Q-013 输入宽容 P3 同源）
+PASS | S-04 admin 日期参数注入串被 assertDate 拦截 | status=400 code=40001
+PASS | S-05 非法日历日 2026-02-30 被 40001 拦截（Q-012 回归） | status=400 msg=from 不是真实存在的日期
+PASS | T-/apk/../.env 路径穿越 /apk/../.env 不可读 | status=404
+PASS | T-/apk/%2e%2e/.env 路径穿越 /apk/%2e%2e/.env 不可读 | status=404
+PASS | T-/apk/..%2f.env 路径穿越 /apk/..%2f.env 不可读 | status=404
+PASS | T-/apk/../../05_代码/backend/.env 路径穿越 /apk/../../05_代码/backend/.env 不可读 | status=404
+PASS | T-/apk/ 路径穿越 /apk/ 不可读 | status=404
+PASS | I-01 未知路径不泄露堆栈/内部路径 | status=404 body={"code":40401,"message":"Cannot GET /api/not-exist-xyz","data":null,"traceId":"a
+FAIL | I-02 未暴露 X-Powered-By | x-powered-by=Express
+PASS | I-03 /me 手机号脱敏 | phoneMasked=139****9000
+PASS | I-04 分页 size 上限钳制（≤50） | status=200 rows=1
+PASS | I-05 Swagger 文档仅 dev 暴露（记录口径） | status=200 NODE_ENV=development（生产构建不注册）
+PASS | R-01 60s 内重复发码被 42901 拦截 | first=200 second=429/42901
+PASS | C-01 跨域陌生 Origin 不下发 ACAO | acao=null
+PASS | C-02 本地 dev Origin 允许 | acao=http://localhost:3000
+[after] users=3 workouts=2 sets=2（与 baseline 一致才允许交接）
+PASS | DB-01 渗透写库零漂移 | 3/2/2
+[summary] total=38 pass=37 fail=1 duration=0.6s
