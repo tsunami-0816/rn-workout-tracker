@@ -351,7 +351,7 @@
 | approved_commit | `4b357a5`（`git rev-parse --short HEAD` 实查代码提交；确认时 HEAD 为 `d48ee69`，仅文档 + 探活脚本） |
 | 确认范围 | 六类关键项：鉴权与权限 / Schema 迁移 / 并发幂等事务 / 版本发布链路 / 启动脚本端口 / 密钥环境 |
 | 本轮实质变动 | 仅「版本发布链路」：1.0.2/build3、两份 release.json 与 apkUrl；其余五类代码未动（`git show --stat 4b357a5` = 8 文件，+45/−18） |
-| 工作树核对 | `git diff --stat -- 05_代码/** 06.5_契约/** release.json docker-compose.yml` = 空（代码与契约零改动） |
-| 作废条件 | `05_代码/**`、`06.5_契约/**`、`release.json`、`docker-compose.yml` 任一改动并产生新 commit → 本审批作废；纯文档/证据 commit（如 `d48ee69`）不改变代码基线，锚点仍为 `4b357a5` |
-| 生效后果 | 5.5 复核闭环（R3 增量 🟢）→ 第 7 步全链路联调可正式开工；10.0 完成门禁读取本锚点 |
+| 工作树核对 | `git diff --stat 4b357a5 -- 05_代码/** release.json docker-compose.yml` = 空；`06.5_契约/openapi.json` 亦零改动（`d48ee69`/`d712777` 只在 06.5 目录新增/改「校验结果记录.md」等文档，契约本体未变） |
+| 作废条件 | `05_代码/**`、`06.5_契约/openapi.json`、`release.json`、`docker-compose.yml` 任一改动并产生新 commit → 本审批作废；纯文档/证据 commit（如 `d48ee69`、`d712777`）不改变代码基线与契约本体，锚点仍为 `4b357a5` |
+| 生效后果 | 5.5 复核闭环（R3 增量 🟢）→ 第 7 步全链路联调 R1 已按 76/0 收口；10.0 完成门禁读取本锚点 |
 | 历史链 | `e333d0b`（D-37~D-41，作废）→ `cfa5760`（Q-009/Q-010 前，作废）→ **`4b357a5`（现行）** |
