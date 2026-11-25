@@ -1,6 +1,7 @@
 # 第 5.5 步 独立代码 Review 报告
 
 - 结论：🔴 **需返工**
+> **R2 复审（2026-11-25）：🟢 代码通过**（P0=0 / P1=0，`design_impl_check --stage 6` = 37✅/13⚠️/0❌ exit 0）；关键项仍需具名确认，详见文末「复审轮 R2」。下方 R1 返工记录原样保留。
 - reviewer 上下文：**新对话 / 独立 reviewer**（未参与 5A、5B 编写；本对话只读代码与跑验证命令，未改任何产品代码）
 - 审查范围：`05_代码/backend`（auth / workouts / sets / plans / stats / admin / app-info / common / trace）、`05_代码/frontend`（api / storage / store / hooks / screens / components / config / tokens）、`06.5_契约/openapi.json`、`scripts/`、`_设计实施映射表.md`、`04_任务拆解与开发规范.md`
 - approved_commit：**—**（项目目录 0 个文件被 git 跟踪，`WORKFLOW_测试` 仓 HEAD `82af601` 不含本次代码；关键项审批无法绑定 commit，建议修复后先 commit 再确认）
@@ -226,3 +227,117 @@
   - **A. 现在做**：用户提供 `eas login`（账号+额度）并安装 Flutter → 按 T-703/704 做 APK/覆盖升级，再补 D-40/41/42~44；
   - **B. 正式砍**：改基线 C07/C08/C10/C11 与映射 D-38~D-44 为 `✂️`（需用户批准，作品集将少「可安装 APK / 跨框架」两项）；
   - **C. 先修代码，打包下次定**：本轮只清 4 条 P1 + P2，EAS/Flutter 暂挂；此选项下 5.5 仍不能绿（stage6 仍红），只能先保 RN 主线。
+
+---
+
+# 复审轮 R2（2026-11-25）· 独立 reviewer
+
+- 结论：🟢 **代码通过（P0=0 / P1=0，新增 P3 3 条）**；关键项已于 2026-11-25 由用户具名确认（见文末「G5 确认记录」）
+- reviewer 上下文：**新对话**，未参与 5A/5B 编写，也未参与 R1 返工轮
+- HEAD：`cfa57607658797968366af1f46e48f8bffb7cee3`（`cfa5760`），工作树 0 改动
+- 审查范围：`05_代码/backend|frontend|flutter`、`06.5_契约`、`09_验收`、`10_交付`、映射表 50 行、`_问题台账.md`
+- approved_commit：**`cfa57607658797968366af1f46e48f8bffb7cee3`（`cfa5760`）· 2026-11-25 用户具名确认** —— 旧审批 `e333d0b`（D-37~D-41）因后续 `797a187/67f4866/cfa5760` 三个新 commit，按 G5 规则作废，本轮改锚 `cfa5760`
+
+## 本轮独立复跑的命令与输出
+
+| 命令 | 实际输出 | 判定 |
+|---|---|---|
+| `design_impl_check.py . --stage 6` | **37✅ / 13⚠️ / 0❌**，exit 0（复核前 35✅，修正 D-12 / D-50 两行过期证据后 +2） | 闸门绿 |
+| `design_impl_check.py . --stage 4` | 50 条目结构完整，exit 0 | 结构未坏 |
+| backend `npm test` | **8 suites / 58 tests PASS**，输出无 e2e | F-08 生效 |
+| backend `npm run test:e2e`（真实起 PG + 8094） | **10/10 PASS**（health / 未登录 401 / 登录 / 40102 / 40001 / 同组幂等 / 403 / 脱敏 / version / size 截断） | R1「未复现」项已复现 |
+| backend `npm run build` | exit 0 | 可构建 |
+| frontend `npx tsc --noEmit` | exit 0 | 类型无回归 |
+| frontend `npm test` | **4 suites / 26 tests PASS** | 含 client 4 条 |
+| `api_contract_validator.py check 06.5_契约/openapi.json 05_代码/frontend` | 18 个调用 / **0 不在契约**，exit 0 | 契约对齐 |
+| 真实 HTTP `/api/app/version` | `1.0.1 / build2 / http://192.168.0.108:8094/apk/rn-workout-1.0.1.apk` | F-03 生效 |
+| 真实 HTTP `/api/stats/weekly`（13900139000） | `days=3, totalVolume=2400, series=[11-02:0, 11-09:500, 11-16:0, 11-23:2400]` | F-01：本周只算 2400，11-09 的 500 未混入 |
+| `HEAD /apk/rn-workout-1.0.1.apk` | HTTP **200** / 77,412,125 bytes | D-40 静态托管真实可用 |
+| `Get-FileHash` 两份 APK | `08862674…98F7` / `35074933…0896D`（不同） | 两版确为不同产物 |
+| 截图抽检 | `apk_1.0.1_覆盖后我的页.jpg` → `v1.0.1 · build 2` / `192.168.0.108:8094`；`apk_1.0.0_统计页.jpg` → 本周 1 天 / 800kg，4 周柱 11-23=800；`更新弹窗1.0.1.jpg` → 「发现新版本 1.0.1」；`flutter_list.png` → 12 动作 | D-38/39/40/42/43 证据属实 |
+
+## 第一层 需求正确性（重点复核 R1 报红与降级项）
+
+| 编号 | 复核方式（文件:行号 / 命令） | R2 结论 |
+|---|---|---|
+| D-38 | `10_交付/apk/rn-workout-1.0.0.apk`（77,412,125B）+ 8 张 `apk_1.0.0_*.jpg`（登录/计划/记录 4 组/结束/已开练/统计/我的/更新弹窗） | ✅ 名副其实 |
+| D-39 | `app.json:6` version=1.0.1、`:22` versionCode=2；`apk_1.0.1_覆盖后我的页.jpg` 显示 `v1.0.1 · build 2`；登录态保留截图 | ✅ |
+| D-40 | 两份 APK 留档 + `/apk` HEAD 200 + `release.json` 指向 LAN + 真机更新弹窗 | ✅ |
+| D-41 | `10_交付/发布记录.md` 含版本链路 / EAS ID / SHA256 / 证书指纹 / 回滚代价 / 3 分钟演示 / 已知限制 | ✅ |
+| D-42/43/44 | `05_代码/flutter/lib/{api_client,main}.dart` + `screens/{login_page,list_page}.dart`；两张 430×900 截图；差异表 8 行且每行两侧都有事实 | ✅ |
+| D-03 | `client.ts:111-114` 仅 `code===40101` 清态；`client.test.ts` 4 条（40102 不清 / 40101 清+Toast / GET 8s 重试 / POST 不重试） | ✅ 恢复 |
+| D-26 | `stats.service.ts:51-61` 本周 `[thisWeekStart, nextWeekStart)`，`:48` 仅 4 周序列用 `starts[0]`；`stats.spec:36-51` 断言注入的两个日期 | ✅ 恢复 |
+| D-28 | `version.service.ts:35-40` 文件优先、env 只补缺；`paths.ts` 以 `_项目状态.md` 为锚点向上找根；`version.spec:47-55` 断言默认路径真实可读 | ✅ 恢复 |
+| D-31 | `trace.middleware.ts:39-41` `ms > 300` 打 warn；`trace.middleware.spec` 2 条（350 打 / 120 不打） | ✅ 恢复 |
+| D-12 | 真实 HTTP 1.0.1/build2 + 真机更新弹窗 | ✅（本轮由 ⚠️ 升级，证据列已改写） |
+| D-50 | p95 100 样本 / 35.3ms、58+26+10 用例、覆盖率 73.05%、APK 73.83MB×2，`_运行度量.md` 均可追溯 | ✅（本轮由 ⚠️ 升级） |
+| 其余 13 行 ⚠️ | 真机 admin 翻页、375/414 目测、断网红行、冷启 hydrate、多设备 | 维持 ⚠️，第 9 步按用户路径走查 |
+
+## 第二层 系统一致性
+
+| 检查项 | 证据 | 结论 |
+|---|---|---|
+| 前后端 18 调用 vs 契约 | `api_contract_validator` 0 越界 | ✅ |
+| 错误语义 40101/40102 分离 | `error-codes.ts:9-10`、`client.ts:112` | ✅ R1 语义漂移已修 |
+| 「一天一练」状态机 | `workout.service.ts:44-52`（复用前断言）、`:60-62`（事务内二次断言）、`:69-79`（P2002 后重查）三处同源；`/plans` 返回 `todayWorkoutPlanId` 供前端置灰 | ✅ |
+| 并发双开 | `schema.prisma` `@@unique([userId, logDate], map: "uk_workout_user_date")` + 迁移 `20261124090000_uk_workout_user_date` | ✅ 约束落在库层 |
+| 契约字段漂移 | `openapi.json` grep `todayWorkoutPlanId` = 0 命中 | ⚠️ P3：交 6.5 重导出后复校，不阻塞 |
+| release.json 单一事实源 | 根目录与 `05_代码/` 各一份且内容同步；`paths.ts` 以看板为锚只读根那份 | ⚠️ P3：双副本靠人工同步，建议删 `05_代码/` 副本或改为生成物 |
+
+## 第三层 回归
+
+| 模块 | 验证 | 结论 |
+|---|---|---|
+| 后端全局 | 58 单测 + build exit 0 + e2e 10/10 | ✅ 无回归 |
+| 前端全局 | tsc 0 error + 26 用例 | ✅ |
+| 打包 / 升级链路 | 1.0.0 安装 → 登录 → 全链路 → 1.0.1 覆盖，登录态保留 | ✅ |
+| 数据层 | 唯一索引随迁移 deploy；F-07 8 并发历史证据 `success=8 / workoutId 全 5 / count=1` | ✅（本轮未重跑脚本，避免再写脏数据） |
+
+## 测试有效性（G6）
+
+| 用例 | 断言对象 | 结论 |
+|---|---|---|
+| `client.test.ts` 4 条 | fetch 调用次数 / store 清态 / Toast | 有效 |
+| `stats.spec:36-51` | `$queryRaw` **注入的两个日期**与 4 周起点不同 | 有效；Q-001「SQL 范围被 mock」已补强，跨周集成仍留第 8 步 |
+| `version.spec:47-55` | 默认路径 `existsSync` + 文件值 vs 接口值 | 有效；Q-002 主要缺口已补 |
+| e2e 10 条 | 真 HTTP status/code + DB 行数 + 脱敏正则 | 有效 |
+| 未覆盖 | 前端真机 UI 路径、admin 翻页、冷启 | 留第 9 步，映射已标 ⚠️ |
+
+## 误报与已确认不修
+
+- **R1 时 e2e 10 FAIL**：Docker 未运行导致的连接失败，非断言失败；本轮起 PG+后端后 10/10 PASS，原记录不改。
+- **`openapi.json` 缺 `todayWorkoutPlanId`**：路径与既有字段未变，前端调用不受影响；6.5 重导出时一并更新。
+- **`release.json` 双副本**：`paths.ts` 已有锚点防截胡，功能正确；仅留维护风险。
+- **D-05 映射描述仍写「点卡进入动作页」**：F-02 后当天已开练会置灰其它卡，属描述滞后，不影响验收。
+
+## 风险变更确认（G5 · 关键项，必须具名确认）
+
+> 依据 `prompts/step05_5_代码独立review.md:80-82`：关键项 5.5 后必须具名人工确认；`approved_commit` 必须等于确认时 HEAD，后续新 commit 旧审批作废。
+
+| 模块 | 风险级别 | 改动（已落地） | 影响链路 | 回滚方式 | approved_commit |
+|---|---|---|---|---|---|
+| 鉴权与权限 | 关键 | JWT / 全局守卫 / @Public / @Roles + 前端仅 40101 清态 | 20 端点 | revert `auth/**`、`guards/**`、`client.ts` | `cfa5760` · 2026-11-25 用户确认 |
+| Schema / 迁移 | 关键 | 5 表 + `uk_workout_user_date` 新唯一索引（迁移 `20261124090000`） | 全后端 / 统计 / 记录 | 恢复旧 schema + `prisma migrate reset` | `cfa5760` · 2026-11-25 用户确认 |
+| 并发 / 幂等 / 事务 | 关键 | set upsert + 事务 SUM；start P2002 重查 | 记录页 / admin 统计 | revert `workout.service.ts` | `cfa5760` · 2026-11-25 用户确认 |
+| 版本 / 发布链路 | 关键 | release.json 文件优先 + 向上找根 + `/apk` 静态托管 + EAS 1.0.0/1.0.1 | 更新弹窗 / 安装 | 恢复旧 `version.service.ts`，保留旧 APK | `cfa5760` · 2026-11-25 用户确认 |
+| 启动脚本 / 端口 | 关键 | start_all / stop_all / preflight（R1 后未改） | 本机联调 | 保留旧脚本 | `cfa5760` · 2026-11-25 用户确认 |
+| 密钥 / 环境 | 关键 | `.env.example` / `.gitignore`；`.env`、keystore、`credentials.json` 均未入库（`git ls-files` 0 命中） | 推仓 / 交付 | 恢复旧模板 | `cfa5760` · 2026-11-25 用户确认 |
+
+## G5 确认记录（2026-11-25 12:10）
+
+| 项 | 值 |
+|---|---|
+| 确认人 | 用户（本会话） |
+| 确认口令 | 「确认 cfa5760 关键项，继续项目 rn-mobile-app-release」 |
+| approved_commit | `cfa57607658797968366af1f46e48f8bffb7cee3`（HEAD，确认时 `git rev-parse HEAD` 实查一致） |
+| 确认范围 | 上表 6 类关键项（鉴权 / Schema 迁移 / 并发幂等事务 / 版本发布 / 启动脚本端口 / 密钥环境） |
+| 工作树状态 | 仅 4 份文档改动（本报告、映射表、运行度量、看板），无代码改动 |
+| 作废条件 | 按 G5：`05_代码/**`、`06.5_契约/**`、`docker-compose.yml`、`release.json` 任一改动并产生新 commit → 本审批作废，需重新具名确认；纯文档回写 commit 不改变代码基线，审批锚点仍是 `cfa5760` |
+| 生效后果 | 5.5 置「已完成」，进入第 6 步阶段一（Agent 自启动 + P0 主路径探活） |
+
+## 闸门与下一步
+
+- 5.5 判定：**🟢 代码通过**（P0=0 / P1=0，新增 P3 3 条）；`--stage 6` exit 0、`--stage 4` exit 0。
+- 无阻塞项回流 5A/5B；6 类关键项已按 `cfa5760` 具名确认，G5 闭环。
+- 下一步：看板 5.5 置「已完成」→ 第 6 步阶段一（Agent 自启动 + P0 主路径探活），阶段二再交用户走主流程。
+
